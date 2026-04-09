@@ -3,896 +3,323 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Montréal · June 12–18, 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<title>Montréal Family Trip Quiz 🍁</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0c0c0e;
-  --surface: #161618;
-  --surface2: #1e1e21;
-  --border: #2a2a2f;
-  --red: #e63946;
-  --gold: #f4c542;
-  --mint: #52d9a0;
-  --sky: #60b4f5;
-  --lilac: #b197fc;
-  --cream: #f5f0e8;
-  --muted: #6b6b72;
-  --text: #e8e6e1;
+  --bg:#faf8f4;--surface:#ffffff;--surface2:#f5f2ec;--border:#e8e2d8;
+  --red:#c8332a;--red-soft:#f5e8e7;--navy:#1a2744;
+  --gold:#c9842a;--gold-soft:#fdf3e3;
+  --mint:#2a7a56;--mint-soft:#e6f4ed;
+  --sky:#1e6baa;--sky-soft:#e3f0fb;
+  --text:#1c1a17;--muted:#8a8070;--light:#c8bfb0;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── LANDING ── */
+#landing{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;background:var(--navy);position:relative;overflow:hidden}
+#landing.active{display:flex}
+#landing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 20%,rgba(200,51,42,.15) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 80%,rgba(201,132,42,.12) 0%,transparent 60%);pointer-events:none}
+.land-inner{position:relative;z-index:1;max-width:480px;width:100%}
+.maple{font-size:3.5rem;margin-bottom:16px;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#landing h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,7vw,3.2rem);font-weight:900;color:white;line-height:1.1;margin-bottom:8px}
+#landing h1 em{font-style:italic;color:#f4c55a;font-weight:400}
+#landing p{font-size:.95rem;color:rgba(255,255,255,.6);margin-bottom:32px;line-height:1.6}
+.config-warn{background:rgba(244,197,66,.12);border:1px solid rgba(244,197,66,.3);border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:left;display:none}
+.config-warn p{font-size:.78rem;color:#f4c55a;margin:0;line-height:1.5}
+.config-warn strong{color:#ffd95a}
+.already-done{display:none;background:rgba(82,217,160,.1);border:1px solid rgba(82,217,160,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;text-align:left}
+.already-done p{font-size:.82rem;color:rgba(82,217,160,.9);line-height:1.5;margin:0}
+.who-label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;text-align:left}
+.who-select{width:100%;padding:16px 20px;border-radius:14px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.5)' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;margin-bottom:16px;transition:border-color .2s}
+.who-select:focus{outline:none;border-color:#f4c55a}
+.who-select option{background:#1a2744;color:white}
+.start-btn{width:100%;padding:18px;border-radius:14px;background:var(--red);color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(200,51,42,.4)}
+.start-btn:hover{background:#a8291f;transform:translateY(-2px)}
+.start-btn:disabled{background:rgba(255,255,255,.15);box-shadow:none;transform:none;cursor:not-allowed;color:rgba(255,255,255,.4)}
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  line-height: 1.5;
-}
+/* ── QUIZ ── */
+#quiz{min-height:100vh;display:none}
+#quiz.active{display:block}
+.quiz-top{background:var(--navy);padding:20px 20px 0;position:sticky;top:0;z-index:50}
+.quiz-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.quiz-who-name{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.7)}
+.quiz-who-name span{color:#f4c55a}
+.quiz-counter{font-size:.78rem;color:rgba(255,255,255,.4);font-weight:600}
+.progress-wrap{height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-bottom:-2px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),#f4c55a);border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1);width:0%}
+.quiz-body{max-width:560px;margin:0 auto;padding:28px 16px 80px}
+.q-card{display:none;animation:qIn .3s ease}
+.q-card.active{display:block}
+@keyframes qIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.q-section-tag{display:inline-flex;align-items:center;gap:5px;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:6px;padding:4px 10px;margin-bottom:10px}
+.tag-whole{background:var(--red-soft);color:var(--red)}
+.tag-parents{background:var(--gold-soft);color:var(--gold)}
+.tag-couple{background:var(--mint-soft);color:var(--mint)}
+.tag-brothers{background:var(--sky-soft);color:var(--sky)}
+.tag-general{background:var(--surface2);color:var(--muted)}
+.q-num{font-size:.68rem;font-weight:700;color:var(--light);letter-spacing:.1em;margin-bottom:4px}
+.q-text{font-family:'Fraunces',serif;font-size:1.22rem;font-weight:700;color:var(--navy);line-height:1.4;margin-bottom:20px}
+.options-list{display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.opt-btn{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:14px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:600;color:var(--text);cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;transition:all .15s;line-height:1.4}
+.opt-btn:hover{border-color:var(--red);background:var(--red-soft)}
+.opt-btn.selected{border-color:var(--red);background:var(--red-soft)}
+.opt-btn.selected .opt-letter{background:var(--red);color:white}
+.opt-letter{width:26px;height:26px;border-radius:50%;background:var(--surface2);color:var(--muted);font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.text-input{width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:500;color:var(--text);background:var(--surface);resize:none;transition:border-color .2s;margin-bottom:24px}
+.text-input:focus{outline:none;border-color:var(--red)}
+.q-nav{display:flex;gap:12px}
+.btn-prev{flex:1;padding:15px;border-radius:13px;background:white;border:2px solid var(--border);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
+.btn-prev:hover{border-color:var(--navy);color:var(--navy)}
+.btn-next{flex:2.5;padding:15px;border-radius:13px;background:var(--navy);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:800;color:white;cursor:pointer;transition:all .15s}
+.btn-next:hover{background:#0f1a30;transform:translateY(-1px)}
+.btn-next:disabled{background:var(--border);color:var(--light);cursor:not-allowed;transform:none}
 
-/* HEADER */
-.hero {
-  padding: 52px 20px 44px;
-  text-align: center;
-  position: relative;
-  background: linear-gradient(180deg, #0c0c0e 0%, #13131a 100%);
-  border-bottom: 1px solid var(--border);
-  overflow: hidden;
-}
+/* ── SUBMITTING OVERLAY ── */
+#submitting{display:none;position:fixed;inset:0;background:rgba(26,39,68,.92);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+#submitting.active{display:flex}
+.spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.15);border-top-color:#f4c55a;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#submitting p{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:600}
 
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 500px;
-  height: 300px;
-  background: radial-gradient(ellipse, rgba(230,57,70,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
+/* ── COMPLETE ── */
+#complete{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;background:var(--navy)}
+#complete.active{display:flex}
+.complete-inner{max-width:400px}
+.complete-inner .big-emoji{font-size:3rem;margin-bottom:16px;display:block}
+.complete-inner h2{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:white;margin-bottom:8px}
+.complete-inner p{font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:28px;line-height:1.6}
+.complete-btns{display:flex;flex-direction:column;gap:10px;width:100%}
+.btn-home{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);padding:14px;border-radius:13px;border:1.5px solid rgba(255,255,255,.15);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-home:hover{background:rgba(255,255,255,.12)}
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--red);
-  border: 1px solid rgba(230,57,70,0.3);
-  border-radius: 99px;
-  padding: 5px 14px;
-  margin-bottom: 20px;
-}
+/* ── ERROR ── */
+#error-screen{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;background:var(--navy)}
+#error-screen.active{display:flex}
+.error-inner{max-width:420px}
+.error-inner .e-icon{font-size:2.5rem;margin-bottom:16px;display:block}
+.error-inner h2{font-family:'Fraunces',serif;font-size:1.6rem;color:white;margin-bottom:10px}
+.error-inner p{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:6px}
+.error-code{background:rgba(255,255,255,.06);border-radius:8px;padding:10px 14px;font-size:.78rem;color:rgba(255,255,255,.35);font-family:monospace;margin:12px 0 24px;text-align:left;word-break:break-all}
+.btn-retry{background:var(--red);color:white;padding:14px 28px;border-radius:13px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;margin-right:8px}
 
-h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2.6rem, 9vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1.0;
-  color: white;
-  margin-bottom: 6px;
-}
-
-h1 span { color: var(--gold); }
-
-.hero-dates {
-  font-family: 'Lora', serif;
-  font-style: italic;
-  font-size: 1.1rem;
-  color: var(--muted);
-  margin-bottom: 24px;
-}
-
-/* Festival alert */
-.alert-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.alert-card {
-  border-radius: 14px;
-  padding: 14px;
-  text-align: left;
-  border: 1px solid;
-}
-
-.alert-card.francos {
-  background: rgba(244,197,66,0.07);
-  border-color: rgba(244,197,66,0.25);
-}
-
-.alert-card.cirque {
-  background: rgba(177,151,252,0.07);
-  border-color: rgba(177,151,252,0.25);
-}
-
-.alert-card .a-icon { font-size: 1.4rem; margin-bottom: 6px; display: block; }
-.alert-card .a-label {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-bottom: 3px;
-}
-.francos .a-label { color: var(--gold); }
-.cirque .a-label { color: var(--lilac); }
-.alert-card .a-title { font-size: 0.82rem; font-weight: 600; color: white; line-height: 1.3; }
-.alert-card .a-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-
-/* MAIN LAYOUT */
-.container {
-  max-width: 580px;
-  margin: 0 auto;
-  padding: 28px 16px 80px;
-}
-
-/* Day headers */
-.day-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 32px 0 16px;
-}
-
-.day-pill {
-  background: var(--red);
-  color: white;
-  font-family: 'Syne', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 6px 14px;
-  border-radius: 99px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.day-title {
-  font-family: 'Lora', serif;
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: white;
-  line-height: 1.25;
-}
-
-.day-sub {
-  font-size: 0.75rem;
-  color: var(--muted);
-  margin-top: 1px;
-}
-
-.day-divider {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-/* Time blocks */
-.block-label {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 18px 0 8px 2px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.block-label::before {
-  content: '';
-  width: 16px;
-  height: 1px;
-  background: var(--border);
-}
-
-/* Activity cards */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 10px;
-  display: grid;
-  grid-template-columns: 46px 1fr;
-  gap: 14px;
-  align-items: start;
-  transition: border-color 0.15s, transform 0.15s;
-  position: relative;
-  overflow: hidden;
-}
-
-.card:hover {
-  border-color: #3a3a42;
-  transform: translateY(-2px);
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-}
-
-.card.type-thrill::before { background: var(--red); }
-.card.type-culture::before { background: var(--lilac); }
-.card.type-food::before { background: var(--gold); }
-.card.type-outdoor::before { background: var(--mint); }
-.card.type-chill::before { background: var(--sky); }
-.card.type-festival::before { background: linear-gradient(180deg, var(--gold), var(--red)); }
-
-.card-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  flex-shrink: 0;
-}
-
-.type-thrill .card-icon { background: rgba(230,57,70,0.12); }
-.type-culture .card-icon { background: rgba(177,151,252,0.12); }
-.type-food .card-icon { background: rgba(244,197,66,0.12); }
-.type-outdoor .card-icon { background: rgba(82,217,160,0.12); }
-.type-chill .card-icon { background: rgba(96,180,245,0.12); }
-.type-festival .card-icon { background: rgba(244,197,66,0.1); }
-
-.card-body h3 {
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-
-.card-body p {
-  font-size: 0.78rem;
-  color: #9090a0;
-  line-height: 1.5;
-}
-
-.card-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-}
-
-.tag {
-  font-size: 0.65rem;
-  font-weight: 600;
-  border-radius: 6px;
-  padding: 3px 8px;
-  letter-spacing: 0.04em;
-}
-
-.tag-time { background: rgba(255,255,255,0.06); color: var(--muted); }
-.tag-book { background: rgba(230,57,70,0.15); color: #ff8080; }
-.tag-free { background: rgba(82,217,160,0.12); color: var(--mint); }
-.tag-festival { background: rgba(244,197,66,0.12); color: var(--gold); }
-.tag-unique { background: rgba(177,151,252,0.12); color: var(--lilac); }
-
-/* Festival spotlight */
-.festival-block {
-  background: linear-gradient(135deg, rgba(244,197,66,0.06), rgba(230,57,70,0.06));
-  border: 1px solid rgba(244,197,66,0.2);
-  border-radius: 18px;
-  padding: 20px;
-  margin: 28px 0 10px;
-}
-
-.festival-block h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--gold);
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.festival-block p {
-  font-size: 0.82rem;
-  color: #a0a0b0;
-  line-height: 1.55;
-}
-
-/* Tip box */
-.tip {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-  margin-top: 24px;
-  font-size: 0.8rem;
-  color: #9090a0;
-  line-height: 1.6;
-}
-
-.tip strong {
-  color: var(--gold);
-  display: block;
-  margin-bottom: 6px;
-  font-size: 0.82rem;
-}
-
-/* Summary strip */
-.summary {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 22px;
-  margin-top: 36px;
-}
-
-.summary h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 14px;
-}
-
-.summary-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.s-item {
-  background: var(--bg);
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 0.78rem;
-}
-
-.s-item .s-label { color: var(--muted); font-size: 0.68rem; margin-bottom: 3px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-.s-item .s-val { color: white; font-weight: 600; }
+@media(max-width:400px){.q-text{font-size:1.08rem}}
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="eyebrow">🍁 Custom Itinerary</div>
-  <h1>Montréal<br><span>June 12–18</span></h1>
-  <p class="hero-dates">7 days · 6 nights · Built from her quiz answers</p>
+<div id="submitting">
+  <div class="spinner"></div>
+  <p>Saving your answers to Google Sheets…</p>
+</div>
 
-  <div class="alert-grid">
-    <div class="alert-card francos">
-      <span class="a-icon">🎵</span>
-      <div class="a-label">Your whole trip!</div>
-      <div class="a-title">Les Francos de Montréal</div>
-      <div class="a-sub">Free outdoor French music festival · June 12–20</div>
+<!-- LANDING -->
+<div id="landing" class="active">
+  <div class="land-inner">
+    <span class="maple">🍁</span>
+    <h1>Montréal<br><em>Family Trip</em><br>June 13–20</h1>
+    <p>Jonathan is planning the trip and wants to know what <em>you</em> want. 25 questions — no wrong answers!</p>
+
+    <div class="config-warn" id="configWarning">
+      <p>⚠️ <strong>Setup needed:</strong> The Google Sheets URL hasn't been configured yet. Jonathan needs to follow the setup steps before responses can be saved.</p>
     </div>
-    <div class="alert-card cirque">
-      <span class="a-icon">🎪</span>
-      <div class="a-label">Still running!</div>
-      <div class="a-title">Cirque du Soleil ECHO</div>
-      <div class="a-sub">Old Port Big Top · Through June 28</div>
+
+    <div class="already-done" id="alreadyDone">
+      <p>✅ <strong id="alreadyName"></strong>, you already submitted your answers! You can retake below if you want to update anything.</p>
+    </div>
+
+    <label class="who-label">Who are you?</label>
+    <select class="who-select" id="personSelect" onchange="onPersonChange()">
+      <option value="">— Select your name —</option>
+      <option value="Jonathan">Jonathan (trip planner &amp; dad)</option>
+      <option value="Lynda">Lynda (mom)</option>
+      <option value="Nick">Nick (Jonathan's brother)</option>
+      <option value="Danielle">Danielle (Nick's wife)</option>
+    </select>
+
+    <button class="start-btn" id="startBtn" disabled onclick="startQuiz()">Start My Quiz →</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz">
+  <div class="quiz-top">
+    <div class="quiz-top-row">
+      <div class="quiz-who-name">Taking quiz: <span id="quizPersonName">—</span></div>
+      <div class="quiz-counter" id="quizCounter">1 / 25</div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+  <div class="quiz-body" id="quizBody"></div>
+</div>
+
+<!-- COMPLETE -->
+<div id="complete">
+  <div class="complete-inner">
+    <span class="big-emoji">🎉</span>
+    <h2>Thanks, <span id="completeName">friend</span>!</h2>
+    <p>Your answers are saved to Jonathan's Google Sheet. He'll use them to build the perfect Montreal itinerary for everyone!</p>
+    <p style="margin-bottom:24px;font-size:.8rem;color:rgba(255,255,255,.3)">Pass this link to the next person who needs to fill it out.</p>
+    <div class="complete-btns">
+      <button class="btn-home" onclick="goHome()">↩ Back to start</button>
     </div>
   </div>
 </div>
 
-<div class="container">
-
-  <div class="festival-block">
-    <h2>🎵 You're arriving on opening day of Les Francos!</h2>
-    <p>Les Francos de Montréal is the world's largest French-language music festival — and your trip runs its entire opening week. Every evening, <strong style="color:var(--gold)">Place des Festivals fills with free outdoor concerts</strong>, street performers, and crowds of Montrealers celebrating in French. This is exactly the "street performer vibe" and French immersion she asked for — and it's free, every single night you're there.</p>
+<!-- ERROR -->
+<div id="error-screen">
+  <div class="error-inner">
+    <span class="e-icon">⚠️</span>
+    <h2>Submission failed</h2>
+    <p>Something went wrong saving to Google Sheets. This is usually a configuration issue with the Apps Script URL.</p>
+    <div class="error-code" id="errorDetail"></div>
+    <p style="margin-bottom:20px">Your answers are still in this browser session. You can try again below.</p>
+    <button class="btn-retry" onclick="retrySubmit()">Try Again</button>
+    <button class="btn-home" style="display:inline-block;margin-top:8px" onclick="goHome()">↩ Back</button>
   </div>
-
-  <!-- DAY 1 -->
-  <div class="day-row">
-    <div class="day-pill">FRI · JUN 12</div>
-    <div class="day-divider"></div>
-    <div>
-      <div class="day-title">Arrive & Les Francos Opening Night</div>
-      <div class="day-sub">Hit the ground running — festival starts tonight</div>
-    </div>
-  </div>
-
-  <div class="block-label">Afternoon — Settle In</div>
-
-  <div class="card type-food">
-    <div class="card-icon">🧳</div>
-    <div class="card-body">
-      <h3>Check in, drop bags, grab a bite</h3>
-      <p>Keep it light — you've got a big evening ahead. Pick up something quick near your hotel or grab a smoked meat sandwich from a local deli if you're staying downtown. Schwartz's Deli is a Montreal institution on Saint-Laurent Blvd.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">2–4 PM</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-outdoor">
-    <div class="card-icon">🚶</div>
-    <div class="card-body">
-      <h3>First walk — Old Montreal orientation</h3>
-      <p>Easy intro walk through the cobblestone streets of Old Montreal. No agenda — just get the feel of the city, spot the street artists starting to appear for the festival, and let her soak in that she's in a French city. Try saying "bonjour" everywhere.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">4–6 PM</span>
-        <span class="tag tag-free">Free</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="block-label">Evening — Opening Night</div>
-
-  <div class="card type-food">
-    <div class="card-icon">🍽️</div>
-    <div class="card-body">
-      <h3>Dinner near Quartier des Spectacles</h3>
-      <p>Eat before the show — the neighborhood around Place des Festivals has great restaurants. Pick something with atmosphere and let her try ordering in French. Keep it to ~90 minutes so you make it to the outdoor stage on time.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">6:30 PM</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-festival">
-    <div class="card-icon">🎵</div>
-    <div class="card-body">
-      <h3>Les Francos — Opening Night at Place des Festivals</h3>
-      <p>The outdoor main stage at Place des Festivals is free and open to everyone. Opening night of the biggest French-language music festival in the world — street performers, massive crowds, a real party atmosphere. She wanted French city vibes and street performers: this is the motherload. The 2026 lineup includes major acts from the international Francophonie.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">8 PM</span>
-        <span class="tag tag-free">Free outdoor stage</span>
-        <span class="tag tag-festival">Francos Night 1</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-chill">
-    <div class="card-icon">🏨</div>
-    <div class="card-body">
-      <h3>Back to hotel — she decompress on her terms</h3>
-      <p>Don't push past her comfort zone on night one. Dépanneur snacks (Quebec corner stores are an experience in themselves — grab chips, a Fanta, some St-Hubert sauce) and a movie. She asked for this every evening.</p>
-      <div class="card-meta"><span class="tag tag-time">10 PM+</span></div>
-    </div>
-  </div>
-
-  <!-- DAY 2 -->
-  <div class="day-row">
-    <div class="day-pill">SAT · JUN 13</div>
-    <div class="day-divider"></div>
-    <div>
-      <div class="day-title">Old Port Adrenaline Day</div>
-      <div class="day-sub">Zipline + pirate ropes course + the observation wheel</div>
-    </div>
-  </div>
-
-  <div class="block-label">Morning — Full Throttle</div>
-
-  <div class="card type-thrill">
-    <div class="card-icon">🚁</div>
-    <div class="card-body">
-      <h3>Tyrolienne MTL Zipline — Old Port Clock Tower</h3>
-      <p>Canada's only urban zipline. Launches from the historic Clock Tower pier and flies over the St. Lawrence River. Heart-pounding and completely unique — there is nowhere else in the world you can do this. First big adrenaline hit of the trip. Saturday means book online before you leave home.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">9 AM</span>
-        <span class="tag tag-book">📅 Book ahead</span>
-        <span class="tag tag-unique">Only in Montréal</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-thrill">
-    <div class="card-icon">⚓</div>
-    <div class="card-body">
-      <h3>Voiles en Voiles — Pirate Aerial Ropes Course</h3>
-      <p>Right next to the zipline — an aerial obstacle course built through actual pirate ships docked in the Old Port. Multiple difficulty tracks. Stack it back-to-back with the zipline for a full adrenaline morning before crowds peak.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">10–11:30 AM</span>
-        <span class="tag tag-book">📅 Book ahead</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="block-label">Afternoon — Views & Vibes</div>
-
-  <div class="card type-food">
-    <div class="card-icon">🧇</div>
-    <div class="card-body">
-      <h3>Lunch on Rue Saint-Paul — Old Montreal</h3>
-      <p>The main cobblestone street of Old Montreal. Lunch somewhere with a great room — she asked for sit-down dinners with atmosphere, and this street delivers even for lunch. Crêpes, poutine, or a classic brasserie. Let her order in French.</p>
-      <div class="card-meta"><span class="tag tag-time">Noon</span></div>
-    </div>
-  </div>
-
-  <div class="card type-thrill">
-    <div class="card-icon">🌀</div>
-    <div class="card-body">
-      <h3>La Grande Roue de Montréal — The Skyline Photo</h3>
-      <p>Canada's tallest Ferris wheel at 197 feet. Glass floor gondolas, panoramic views of the St. Lawrence and the entire skyline. This is the photo she specifically said she wanted — get it today while the light is good in the afternoon.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">2 PM</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-chill">
-    <div class="card-icon">🌿</div>
-    <div class="card-body">
-      <h3>Hotel recharge — afternoon off</h3>
-      <p>Big active morning. Give her the 3:30–6 PM window completely free. She asked for active mornings and chill afternoons — honor the rhythm. She'll be in a better mood for the evening.</p>
-      <div class="card-meta"><span class="tag tag-time">3:30–6 PM</span></div>
-    </div>
-  </div>
-
-  <div class="block-label">Evening — Francos Night 2</div>
-
-  <div class="card type-festival">
-    <div class="card-icon">🎵</div>
-    <div class="card-body">
-      <h3>Les Francos — free outdoor stage, Place des Festivals</h3>
-      <p>Night 2 of the festival. Saturday night means the biggest crowds and the best performers. Grab food from one of the outdoor vendors and stand in a sea of Montrealers singing along to French music under the lights. She'll feel the city.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">7:30 PM</span>
-        <span class="tag tag-free">Free</span>
-        <span class="tag tag-festival">Francos Night 2</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DAY 3 -->
-  <div class="day-row">
-    <div class="day-pill">SUN · JUN 14</div>
-    <div class="day-divider"></div>
-    <div>
-      <div class="day-title">Mont Royal + Plateau Sunday</div>
-      <div class="day-sub">The hike she asked for + Tam-Tams + boutiques</div>
-    </div>
-  </div>
-
-  <div class="block-label">Morning — The Big Hike</div>
-
-  <div class="card type-outdoor">
-    <div class="card-icon">🏔️</div>
-    <div class="card-body">
-      <h3>Hike Mont Royal — Belvédère Kondiaronk lookout</h3>
-      <p>She named this specifically. Go at 8:30 AM — cool air, fewer people, better light for photos at the summit. The Belvédère lookout gives the sweeping panoramic city view from the mountain itself. Different angle from the Ferris wheel, equally stunning.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">8:30–10:30 AM</span>
-        <span class="tag tag-free">Free</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-culture">
-    <div class="card-icon">🥁</div>
-    <div class="card-body">
-      <h3>Tam-Tam drum circle at the base of the mountain</h3>
-      <p>Every Sunday in summer, a massive spontaneous drum circle happens at the George-Étienne Cartier monument at the foot of Mont Royal — hundreds of drummers, dancers, hippies, and Montrealers of every description. Zero admission, zero agenda. Pure Montreal weirdness. She will love this.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">Sundays, 11 AM+</span>
-        <span class="tag tag-free">Free</span>
-        <span class="tag tag-unique">Only on Sundays</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-food">
-    <div class="card-icon">🥯</div>
-    <div class="card-body">
-      <h3>Fairmount Bagel — legendary wood-fired Montreal bagels</h3>
-      <p>10-minute walk from the mountain. Wood-fired, hand-rolled, absolutely nothing like what she's eaten at home. A genuine Montreal food moment that locals are borderline defensive about. Get them fresh out of the oven.</p>
-      <div class="card-meta"><span class="tag tag-time">11:30 AM</span></div>
-    </div>
-  </div>
-
-  <div class="block-label">Afternoon — Plateau Boutiques</div>
-
-  <div class="card type-culture">
-    <div class="card-icon">🛍️</div>
-    <div class="card-body">
-      <h3>Plateau-Mont-Royal boutique shopping</h3>
-      <p>Mont-Royal Avenue and Saint-Denis Street — the exact local, independent, quirky shops she asked for. No chains, no malls. Vintage fashion, indie jewelry, art prints, record stores, specialty snacks. Let her lead. Budget 2 hours minimum.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">1–3:30 PM</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-chill">
-    <div class="card-icon">🌳</div>
-    <div class="card-body">
-      <h3>Parc La Fontaine — afternoon in the sun</h3>
-      <p>Beautiful park right in the Plateau. Paddle boats on the lake, people picnicking, often has buskers and street performers on summer Sundays. Great place to sit and do nothing for an hour after shopping.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">3:30–5:30 PM</span>
-        <span class="tag tag-free">Free</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="block-label">Evening — Francos Night 3</div>
-
-  <div class="card type-festival">
-    <div class="card-icon">🎵</div>
-    <div class="card-body">
-      <h3>Les Francos + late poutine at La Banquise</h3>
-      <p>Third night of the festival — by now you'll feel like regulars at Place des Festivals. After the show, hit La Banquise for late-night poutine (open 24h, 30+ varieties). It's a 10-minute walk from the festival. A perfect ending to a big Sunday.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">7 PM onward</span>
-        <span class="tag tag-free">Stage is free</span>
-        <span class="tag tag-festival">Francos Night 3</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DAY 4 -->
-  <div class="day-row">
-    <div class="day-pill">MON · JUN 15</div>
-    <div class="day-divider"></div>
-    <div>
-      <div class="day-title">Cirque du Soleil + Immersive Art</div>
-      <div class="day-sub">Her "unique experience" + her "hands-on art" — both in one day</div>
-    </div>
-  </div>
-
-  <div class="block-label">Morning — Olympic Park</div>
-
-  <div class="card type-culture">
-    <div class="card-icon">🏟️</div>
-    <div class="card-body">
-      <h3>Olympic Park Tower — inclined funicular to the top</h3>
-      <p>The 1976 Olympic Stadium complex is genuinely wild architecture. The world's tallest leaning tower has an inclined funicular to a massive observation deck. Unique vantage point of the city — very different from the Ferris wheel or Mont Royal. Opens at 9 AM.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">9–10:30 AM</span>
-        <span class="tag tag-unique">Only in Montréal</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card type-culture">
-    <div class="card-icon">🦋</div>
-    <div class="card-body">
-      <h3>Montreal Biodôme</h3>
-      <p>Five complete ecosystems under one roof — tropical rainforest, sub-polar, St. Lawrence marine, Laurentian maple forest. Penguins, otters, capybaras, and a full canopy of tropical birds. Right at Olympic Park. More engaging than it sounds for teenagers.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">10:30 AM–Noon</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="block-label">Afternoon — Art Dome</div>
-
-  <div class="card type-food">
-    <div class="card-icon">🍜</div>
-    <div class="card-body">
-      <h3>Lunch — downtown or Chinatown</h3>
-      <p>Montreal's Chinatown is compact but excellent — vibrant, cheap, casual. Good spot between Olympic Park and the SAT dome downtown.</p>
-      <div class="card-meta"><span class="tag tag-time">Noon–1:30 PM</span></div>
-    </div>
-  </div>
-
-  <div class="card type-culture">
-    <div class="card-icon">🎨</div>
-    <div class="card-body">
-      <h3>SAT Satosphere — 360° Immersive Dome Experience</h3>
-      <p>The SAT runs audiovisual shows inside a full 360° dome — visuals and sound wrap completely around you. This is her hands-on interactive art moment. Genuinely different from anything in the US — the SAT was the birthplace of immersive dome art. The summer program includes music and visual shows running through June 25.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">2:30 PM</span>
-        <span class="tag tag-book">📅 Book ahead</span>
-        <span class="tag tag-unique">Only in Montréal</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="block-label">Evening — Cirque du Soleil</div>
-
-  <div class="card type-thrill">
-    <div class="card-icon">🎪</div>
-    <div class="card-body">
-      <h3>Cirque du Soleil ECHO — Old Port Big Top</h3>
-      <p>This is the one. Cirque du Soleil was born in Montreal and ECHO is running at the Old Port through June 28 — you are perfectly timed. A full ticketed circus show under the iconic blue-and-yellow Big Top: acrobats, aerialists, clowns, live music, spectacular staging. She wanted something she can't do anywhere else. Cirque in its hometown is it. Book now — summer weeknights sell out.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">Showtimes vary</span>
-        <span class="tag tag-book">📅 Book NOW — sells out</span>
-        <span class="tag tag-unique">Cirque hometown show</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DAY 5 -->
-  <div class="day-row">
-    <div class="day-pill">TUE · JUN 16</div>
-    <div class="day-divider"></div>
-    <div>
-      <div class="day-title">Her Day — She Picks Everything</div>
-      <div class="day-sub">Directly addressing her #1 worry: getting bored</div>
-    </div>
-  </div>
-
-  <div class="card type-thrill" style="margin-top:12px">
-    <div class="card-icon">🎯</div>
-    <div class="card-body">
-      <h3>The night before — show her four options, let her decide</h3>
-      <p>She said her biggest worry is getting bored if nothing is specifically for her. Give her agency. Present these the night of June 15, she picks by morning:</p>
-      <div class="card-meta" style="margin-bottom:10px">
-        <span class="tag tag-unique">Her control</span>
-      </div>
-      <p><strong style="color:white">A — iFLY Indoor Skydiving (Laval, 20 min):</strong> Full-body wind tunnel free-fall simulation. Pure adrenaline, completely safe.</p><br>
-      <p><strong style="color:white">B — TOHU Circus Arts Center:</strong> Montreal's dedicated circus venue — Cirque du Soleil's sister institution. Shows, workshops, and performances by the next generation of circus artists.</p><br>
-      <p><strong style="color:white">C — Free Roam VR Experience:</strong> Walk around inside a virtual world with no controllers. Multiple venues in downtown Montreal. Wild for a teenager.</p><br>
-      <p><strong style="color:white">D — Axe throwing + escape room combo:</strong> BATL Axe Throwing is downtown, combine with one of Montreal's many escape rooms for a full afternoon adventure.</p>
-    </div>
-  </div>
-
-  <div class="card type-food">
-    <div class="card-icon">🍽️</div>
-    <div class="card-body">
-      <h3>Evening — she also picks the restaurant</h3>
-      <p>Full autonomy day. Let her find the dinner spot too — show her a few options on Google Maps and let her decide. She'll feel ownership over the trip. This is how you prevent the boredom she's worried about.</p>
-      <div class="card-meta"><span class="tag tag-time">Evening</span></div>
-    </div>
-  </div>
-
-  <div class="card type-festival">
-    <div class="card-icon">🎵</div>
-    <div class="card-body">
-      <h3>Les Francos continues — free outdoor stage option</h3>
-      <p>If her pick goes late afternoon, cap the night at Place des Festivals on the way back. By now it'll feel like your nightly ritual and she'll want to go.</p>
-      <div class="card-meta">
-        <span class="tag tag-free">Free</span>
-        <span class="tag tag-festival">Francos Night 5</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DAY 6 -->
-  <div class="day-row">
-    <div class="day-pill">WED · JUN 17</div>
-    <div class="day-divider"></div>
-    <div>
-      <div class="day-title">Lachine Rapids — The Big Finale</div>
-      <div class="day-sub">White-knuckle rafting in the middle of the city</div>
-    </div>
-  </div>
-
-  <div class="block-label">Morning</div>
-
-  <div class="card type-thrill">
-    <div class="card-icon">🌊</div>
-    <div class="card-body">
-      <h3>Lachine Rapids Whitewater Rafting — Club Raft MTL</h3>
-      <p>Class 2–3 rapids on the St. Lawrence River, right inside the city of Montreal. The downtown skyline is visible behind you the entire time. One of the most surreal urban adventure experiences in North America — you are literally rafting through a major international city. This is her "can't do this anywhere else" moment. Her one must-do.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">9 AM start</span>
-        <span class="tag tag-book">📅 Book ahead</span>
-        <span class="tag tag-unique">Most unique thing in the city</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="block-label">Afternoon — Wind Down</div>
-
-  <div class="card type-outdoor">
-    <div class="card-icon">🚲</div>
-    <div class="card-body">
-      <h3>Lachine Canal Bixi bike ride</h3>
-      <p>The canal path is one of the great rides in Montreal — flat, beautiful, totally doable post-rafting. Rent Bixi bikes at a nearby station and cruise toward Atwater Market.</p>
-      <div class="card-meta"><span class="tag tag-time">11:30 AM</span></div>
-    </div>
-  </div>
-
-  <div class="card type-food">
-    <div class="card-icon">☀️</div>
-    <div class="card-body">
-      <h3>Atwater Market picnic lunch by the canal</h3>
-      <p>One of Montreal's best markets — cheese, bread, charcuterie, seasonal fruit, pastries. Grab supplies and eat by the water. Relaxed, beautiful, completely off the tourist path.</p>
-      <div class="card-meta"><span class="tag tag-time">Noon–1:30 PM</span></div>
-    </div>
-  </div>
-
-  <div class="card type-chill">
-    <div class="card-icon">🌿</div>
-    <div class="card-body">
-      <h3>Afternoon rest — hotel or park</h3>
-      <p>Rafting takes it out of you. Give her a genuine rest afternoon. Pre-departure evening shouldn't be exhausted.</p>
-      <div class="card-meta"><span class="tag tag-time">2:30–5:30 PM</span></div>
-    </div>
-  </div>
-
-  <div class="block-label">Evening — Final Francos Night</div>
-
-  <div class="card type-festival">
-    <div class="card-icon">🎵</div>
-    <div class="card-body">
-      <h3>Final night at Les Francos + a proper goodbye dinner</h3>
-      <p>Second-to-last night in the city. Dinner somewhere great — she's had five days of context now and knows what she loves about Montreal. Then one final walk through Place des Festivals for the night concert. Let her lead. She knows the city now.</p>
-      <div class="card-meta">
-        <span class="tag tag-time">6:30 PM onward</span>
-        <span class="tag tag-festival">Francos Night 6</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DAY 7 -->
-  <div class="day-row">
-    <div class="day-pill">THU · JUN 18</div>
-    <div class="day-divider"></div>
-    <div>
-      <div class="day-title">Departure Morning</div>
-      <div class="day-sub">One last French moment, then home</div>
-    </div>
-  </div>
-
-  <div class="card type-food" style="margin-top:12px">
-    <div class="card-icon">☕</div>
-    <div class="card-body">
-      <h3>Breakfast at a local boulangerie — order entirely in French</h3>
-      <p>She said she wants to try speaking French. This is the final moment. Help her order: <em style="color:var(--gold)">"Un café au lait et un croissant, s'il vous plaît."</em> — A coffee with milk and a croissant, please. She'll carry this memory for years.</p>
-      <div class="card-meta"><span class="tag tag-time">Morning</span></div>
-    </div>
-  </div>
-
-  <div class="card type-outdoor">
-    <div class="card-icon">🛍️</div>
-    <div class="card-body">
-      <h3>Last souvenir sweep if time allows</h3>
-      <p>If you have an afternoon flight, a quick last run through the Plateau or Old Montreal for any final finds. Otherwise, head to YUL — 25 minutes from downtown, Pierre Elliott Trudeau Airport.</p>
-      <div class="card-meta"><span class="tag tag-time">Depends on flight</span></div>
-    </div>
-  </div>
-
-  <div class="card type-thrill">
-    <div class="card-icon">✈️</div>
-    <div class="card-body">
-      <h3>Depart from YUL — 25 min from downtown</h3>
-      <p>Seven days done. She got adrenaline, French culture, a skyline view, a hike, street performers, a circus show, boutique shopping, rafting, and the freedom to pick one whole day herself. She will not be bored.</p>
-      <div class="card-meta"></div>
-    </div>
-  </div>
-
-  <!-- TRIP SUMMARY -->
-  <div class="summary">
-    <h2>📋 Before You Go — Book These Now</h2>
-    <div class="summary-grid">
-      <div class="s-item">
-        <div class="s-label">Book immediately</div>
-        <div class="s-val">🎪 Cirque ECHO tickets</div>
-      </div>
-      <div class="s-item">
-        <div class="s-label">Book before trip</div>
-        <div class="s-val">🚁 Zipline + ⚓ Ropes Course</div>
-      </div>
-      <div class="s-item">
-        <div class="s-label">Book before trip</div>
-        <div class="s-val">🌊 Lachine Rapids rafting</div>
-      </div>
-      <div class="s-item">
-        <div class="s-label">Book ahead</div>
-        <div class="s-val">🎨 SAT Satosphere show</div>
-      </div>
-      <div class="s-item">
-        <div class="s-label">Buy on arrival</div>
-        <div class="s-val">🚇 7-day STM pass (~$30 CAD)</div>
-      </div>
-      <div class="s-item">
-        <div class="s-label">Free every night</div>
-        <div class="s-val">🎵 Les Francos outdoor stage</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="tip">
-    <strong>💡 Key things to know for June 12–18</strong>
-    Montreal in mid-June is warm (20–25°C / 68–77°F) with long daylight — still light past 8:30 PM. Les Francos outdoor concerts are free and require no tickets; just show up at Place des Festivals. The festival's headliner shows inside the venues are ticketed — check francosmontreal.com for the lineup closer to your trip. Cirque du Soleil ECHO is the big-ticket splurge of the week — absolutely worth it and she specifically asked for a unique experience. STM metro is clean, fast, easy to learn. French is the language everywhere but locals in the tourist areas all speak English — encourage her to try French anyway, it's the whole vibe she wanted.
-  </div>
-
 </div>
+
+<script>
+// ╔══════════════════════════════════════════════════════╗
+// ║  STEP 1 — Paste your Apps Script Web App URL below  ║
+// ║  (see README.md for how to get this URL)             ║
+// ╚══════════════════════════════════════════════════════╝
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxfrKTuokhfaY_kxW-pUCpRVy1sO571ZTeD1eL3hw1ZQOQJTR0xjoCNnkj46ISK0Dj_jw/exec';
+
+// ── Questions ────────────────────────────────────────────
+const Q = [
+  {id:1, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'When the whole family is together, what kind of activity sounds best?', opts:['A leisurely group meal at a great restaurant — everyone around the same table','A scenic outing everyone can enjoy at their own pace (park, waterfront, easy walk)','A structured activity or tour we all do together','A mix — group meals but free time for sub-groups to do their own thing']},
+  {id:2, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'How many whole-group dinners per week feels right to you?', opts:['Every night — family meals are the heart of the trip','Most nights (4–5), with a couple nights where sub-groups split off','A few times (2–3) — flexibility is important','Just one or two big group meals, otherwise everyone does their own thing']},
+  {id:3, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'Pick the best whole-group outing for the full age range (teen through 65):', opts:['Old Montreal — cobblestone streets, history, architecture, café stops','Old Port waterfront — outdoor vendors, Ferris wheel, easy strolling','A guided food tour of the city — eating our way around Montreal','Mont Royal park — the mountain, the lookout, a picnic']},
+  {id:4, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'How do you feel about one splurge group dinner at a high-end Montreal restaurant?', opts:['Love it — a special dinner together is a trip highlight','Fine with it if the menu works for everyone','Prefer something casual and relaxed for the whole group','I\'d rather save money and do a great casual spot instead']},
+  {id:5, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'Honest walking tolerance for a full group day?', opts:['High — 5–8 miles a day, no problem','Moderate — 2–4 miles is fine, with rest breaks and places to sit','Low — short distances, need bench or café breaks frequently','Depends on terrain and weather — hills and heat are harder']},
+  {id:6, sec:'parents',  lbl:'👴👵 Parents\' Time', type:'choice', text:'If the parents had a half-day to themselves in Montreal, what sounds most appealing?', opts:['A slow relaxed café morning — great coffee, croissants, people-watching','A museum or gallery at their own pace, no rushing','A scenic garden or park — quiet, beautiful, easy on the feet','A boat or bus tour so they can see the city without walking much']},
+  {id:7, sec:'parents',  lbl:'👴👵 Parents\' Time', type:'choice', text:'What kind of neighborhood appeals most for a quiet wander?', opts:['Old Montreal — historic stone buildings and French character','A relaxed residential neighborhood with local shops and cafés','Near the waterfront or a park — greenery and open air','Stay close to the hotel, not wander far']},
+  {id:8, sec:'parents',  lbl:'👴👵 Parents\' Time', type:'choice', text:'Any physical limitations or mobility considerations to plan around?', opts:['None — I\'m in good shape, no problem with hills, stairs, long walks','Some — I prefer flat terrain and want to avoid steep hills','Yes — stairs and long distances are difficult; I need nearby seating','I\'d rather not say — but please keep activities manageable']},
+  {id:9, sec:'parents',  lbl:'👴👵 Parents\' Time', type:'choice', text:'What time of day do you have the most energy for sightseeing?', opts:['Morning — I like to be out early and rest in the afternoon','Midday — good from 10 AM to 2 PM, then I slow down','Afternoon — I hit my stride after noon','Evenings are actually my best time for being out']},
+  {id:10,sec:'couple',   lbl:'💑 Nick & Danielle',  type:'choice', text:'Danielle is 4 months pregnant. How important is it that couple activities are pregnancy-friendly?', opts:['Very — everything we do together should be easy and comfortable for Danielle','Somewhat — we\'ll mix in low-key options but still want real experiences','Nick can do some things solo while Danielle rests, if needed','Danielle wants to be treated normally — she\'ll speak up if something is too much']},
+  {id:11,sec:'couple',   lbl:'💑 Nick & Danielle',  type:'choice', text:'What\'s the ideal couple outing for Nick and Danielle in Montreal?', opts:['A beautiful sit-down dinner, just the two of them, at a great restaurant','A relaxed afternoon in a cool neighborhood — shopping, café, no agenda','Something cultural — a museum, gallery, or a show','An easy outdoor experience — gardens, waterfront, a scenic walk']},
+  {id:12,sec:'couple',   lbl:'💑 Nick & Danielle',  type:'choice', text:'How does Danielle feel about food adventurousness right now?', opts:['Open to everything — no issues with food on this trip','Prefer simple, familiar options — nothing too adventurous','Need to avoid certain things (strong smells, raw fish, spices) — I\'ll note below','Still figuring out what works — please keep options flexible']},
+  {id:13,sec:'couple',   lbl:'💑 Nick & Danielle',  type:'choice', text:'How important is dedicated rest/downtime built into each day?', opts:['Very — planned afternoon rests would be ideal','Somewhat — I\'ll rest when I need to, no need to schedule it','Not really — I\'d rather stay active and push through','Depends on how the day is going']},
+  {id:14,sec:'brothers', lbl:'👬 Brothers Only',     type:'choice', text:'Jonathan and Nick get a morning or afternoon together. What sounds best?', opts:['Something physical and active — a hike, rafting, or an adrenaline activity','Exploring a neighborhood together — walking, talking, discovering things','A great lunch or dinner, just the two of them, at somewhere worth going','A competitive activity — axe throwing, escape room, something fun']},
+  {id:15,sec:'brothers', lbl:'👬 Brothers Only',     type:'text',   text:'Is there anything specific Nick wants to do that he\'d want Jonathan along for?', placeholder:'e.g. "I really want to do the zipline" or "I want to find a good whisky bar"…'},
+  {id:16,sec:'general',  lbl:'🍽️ Food & Dining',   type:'choice', text:'Montreal is famous for its food. What are you most excited to eat or try?', opts:['Poutine, smoked meat, bagels — the classic Montreal staples','French/Québécois cuisine — bistros, terrines, French technique','Whatever the locals eat right now — the current hot spots','I\'m not a big foodie — just good, reliable, reasonably-priced meals']},
+  {id:17,sec:'general',  lbl:'🍽️ Food & Dining',   type:'text',   text:'Any dietary needs, allergies, or strong dislikes the group should know about?', placeholder:'e.g. "vegetarian", "nut allergy", "no seafood", "none"…'},
+  {id:18,sec:'general',  lbl:'🍽️ Food & Dining',   type:'choice', text:'Preferred atmosphere for group dinners?', opts:['Lively and bustling — I like noise, energy, atmosphere','Quieter and more intimate — I want to hear the conversation','Outdoor terraces or patios when weather allows','Flexible — if the food is great I don\'t care about the vibe']},
+  {id:19,sec:'general',  lbl:'⚡ Pace & Energy',    type:'choice', text:'Ideal daily rhythm on a trip like this?', opts:['Early start, packed schedule — see as much as possible','Active morning, leisurely afternoon, lively evening','Slow mornings, one or two things per day, no rushing','Totally flexible — I go with what the group decides']},
+  {id:20,sec:'general',  lbl:'⚡ Pace & Energy',    type:'choice', text:'How do you recharge when you\'re tired on a trip?', opts:['A quiet hour at the hotel — I need alone time to reset','A long coffee at a café — watching the world go by','A sit-down meal recharges me — food fixes everything','I push through — I\'ll rest when I\'m home']},
+  {id:21,sec:'general',  lbl:'🌆 City Experience',  type:'choice', text:'What excites you most about Montreal specifically?', opts:['The French language and culture — it genuinely feels like Europe','The food scene — one of the best restaurant cities in North America','The festivals and street energy — June means Les Francos festival!','Just being somewhere different and interesting together as a family']},
+  {id:22,sec:'general',  lbl:'🌆 City Experience',  type:'choice', text:'Anything you\'d quietly dread — things you hope NOT to do?', opts:['Long museum visits — I get bored in museums quickly','Intense physical activities — not looking for adrenaline','Crowded tourist traps — I prefer authentic local experiences','I\'m easygoing — I\'ll do whatever the group decides']},
+  {id:23,sec:'general',  lbl:'🌆 City Experience',  type:'choice', text:'How comfortable are you in a city where French is the primary language?', opts:['Very — I love immersing in another language','Fine — locals speak English too and I\'ll manage','A little nervous — I hope signage and menus are bilingual','I\'ll lean on whoever in the group speaks more French']},
+  {id:24,sec:'general',  lbl:'💬 Just for Jonathan', type:'text',  text:'One thing — just one — that you really hope happens on this trip?', placeholder:'Could be big or small — a meal, a view, a moment, an activity…'},
+  {id:25,sec:'general',  lbl:'💬 Just for Jonathan', type:'text',  text:'Anything Jonathan should know before planning — health, mobility, strong preferences, or things that could ruin the trip?', placeholder:'Completely optional but very helpful for planning…'}
+];
+
+// ── Submitted list (localStorage fallback) ──────────────
+const SK = 'mtl_submitted_2026';
+function getSubmitted(){try{return JSON.parse(localStorage.getItem(SK))||[]}catch(e){return[]}}
+function markSubmitted(p){const l=getSubmitted();if(!l.includes(p)){l.push(p);localStorage.setItem(SK,JSON.stringify(l))}}
+
+// ── State ────────────────────────────────────────────────
+let person='', curQ=0, answers={}, pending=null;
+
+// ── View switching ───────────────────────────────────────
+function show(id){['landing','quiz','complete','error-screen'].forEach(v=>document.getElementById(v).classList.remove('active'));document.getElementById(id).classList.add('active')}
+function goHome(){document.getElementById('personSelect').value='';document.getElementById('startBtn').disabled=true;document.getElementById('alreadyDone').style.display='none';show('landing');scroll()}
+function scroll(){window.scrollTo({top:0,behavior:'smooth'})}
+
+// ── Landing ──────────────────────────────────────────────
+function onPersonChange(){
+  const v=document.getElementById('personSelect').value;
+  document.getElementById('startBtn').disabled=!v;
+  const done=getSubmitted();
+  const ad=document.getElementById('alreadyDone');
+  if(v&&done.includes(v)){document.getElementById('alreadyName').textContent=v;ad.style.display='block'}else{ad.style.display='none'}
+}
+
+function startQuiz(){
+  person=document.getElementById('personSelect').value;
+  if(!person)return;
+  answers={};curQ=0;
+  document.getElementById('quizPersonName').textContent=person;
+  buildQuiz();show('quiz');scroll();
+}
+
+// ── Build quiz DOM ───────────────────────────────────────
+const SC={whole:'tag-whole',parents:'tag-parents',couple:'tag-couple',brothers:'tag-brothers',general:'tag-general'};
+const LT=['A','B','C','D'];
+
+function ea(s){return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+
+function buildQuiz(){
+  const b=document.getElementById('quizBody');b.innerHTML='';
+  Q.forEach((q,i)=>{
+    const isLast=i===Q.length-1;
+    const card=document.createElement('div');
+    card.className='q-card'+(i===0?' active':'');card.id='qc'+i;
+    let inp='';
+    if(q.type==='choice'){
+      inp='<div class="options-list">'+q.opts.map((o,oi)=>`<button class="opt-btn" onclick="pick(this,${q.id},${i})" data-val="${ea(o)}"><span class="opt-letter">${LT[oi]}</span><span>${o}</span></button>`).join('')+'</div>';
+    }else{
+      inp=`<textarea class="text-input" rows="3" placeholder="${ea(q.placeholder||'')}" id="tx${q.id}" oninput="onTxt(${q.id},${i})"></textarea>`;
+    }
+    card.innerHTML=`<div class="q-section-tag ${SC[q.sec]||'tag-general'}">${q.lbl}</div><div class="q-num">QUESTION ${q.id} OF 25</div><div class="q-text">${q.text}</div>${inp}<div class="q-nav">${i>0?`<button class="btn-prev" onclick="prev(${i})">← Back</button>`:''}<button class="btn-next" id="nb${i}" ${q.type==='text'?'':'disabled'} onclick="${isLast?'submit()':'`next('+i+')`'}">  ${isLast?'Submit Answers 🍁':'Next →'}</button></div>`;
+    b.appendChild(card);
+  });
+  prog();
+}
+
+function pick(btn,qId,qIdx){
+  document.getElementById('qc'+qIdx).querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');answers[qId]=btn.dataset.val;
+  document.getElementById('nb'+qIdx).disabled=false;
+}
+
+function onTxt(qId,qIdx){
+  answers[qId]=document.getElementById('tx'+qId).value;
+  document.getElementById('nb'+qIdx).disabled=false;
+}
+
+function next(i){document.getElementById('qc'+i).classList.remove('active');curQ=i+1;document.getElementById('qc'+curQ).classList.add('active');prog();scroll()}
+function prev(i){document.getElementById('qc'+i).classList.remove('active');curQ=i-1;document.getElementById('qc'+curQ).classList.add('active');prog();scroll()}
+function prog(){document.getElementById('progressFill').style.width=(curQ/(Q.length-1)*100)+'%';document.getElementById('quizCounter').textContent=`${curQ+1} / ${Q.length}`}
+
+// ── Submit ───────────────────────────────────────────────
+function submit(){
+  Q.filter(q=>q.type==='text').forEach(q=>{const e=document.getElementById('tx'+q.id);if(e)answers[q.id]=e.value||''});
+  const payload={person,timestamp:new Date().toLocaleString('en-US',{timeZone:'America/New_York'})};
+  Q.forEach(q=>{payload['Q'+q.id+'_'+q.text.substring(0,40).replace(/[^a-zA-Z0-9]/g,'_')]=answers[q.id]||''});
+  pending=payload;
+  send(payload);
+}
+
+function send(payload){
+  if(SHEET_URL==='YOUR_APPS_SCRIPT_URL_HERE'){document.getElementById('errorDetail').textContent='SHEET_URL not configured. Follow the setup instructions in README.md.';show('error-screen');return}
+  document.getElementById('submitting').classList.add('active');
+  fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)})
+  .then(()=>{document.getElementById('submitting').classList.remove('active');markSubmitted(person);document.getElementById('completeName').textContent=person;show('complete');scroll()})
+  .catch(err=>{document.getElementById('submitting').classList.remove('active');document.getElementById('errorDetail').textContent=err.toString();show('error-screen')});
+}
+
+function retrySubmit(){if(pending)send(pending)}
+
+// ── Init ─────────────────────────────────────────────────
+window.addEventListener('load',()=>{if(SHEET_URL==='YOUR_APPS_SCRIPT_URL_HERE')document.getElementById('configWarning').style.display='block'});
+
+// Fix onclick string interpolation for next button
+document.addEventListener('click',e=>{
+  const nb=e.target.closest('.btn-next');
+  if(!nb)return;
+  const id=nb.id;
+  if(!id||!id.startsWith('nb'))return;
+  const idx=parseInt(id.slice(2));
+  if(idx===Q.length-1)submit();
+  else next(idx);
+});
+// Override the inline onclick on btn-next since we handle it above
+// (inline onclicks still fire — remove them from template)
+</script>
 </body>
 </html>
