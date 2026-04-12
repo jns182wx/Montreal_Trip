@@ -3,323 +3,627 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Montréal Family Trip Quiz 🍁</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Montréal Family Trip Guide · June 13–20, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#faf8f4;--surface:#ffffff;--surface2:#f5f2ec;--border:#e8e2d8;
-  --red:#c8332a;--red-soft:#f5e8e7;--navy:#1a2744;
-  --gold:#c9842a;--gold-soft:#fdf3e3;
-  --mint:#2a7a56;--mint-soft:#e6f4ed;
-  --sky:#1e6baa;--sky-soft:#e3f0fb;
-  --text:#1c1a17;--muted:#8a8070;--light:#c8bfb0;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-
-/* ── LANDING ── */
-#landing{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;background:var(--navy);position:relative;overflow:hidden}
-#landing.active{display:flex}
-#landing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 20%,rgba(200,51,42,.15) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 80%,rgba(201,132,42,.12) 0%,transparent 60%);pointer-events:none}
-.land-inner{position:relative;z-index:1;max-width:480px;width:100%}
-.maple{font-size:3.5rem;margin-bottom:16px;display:block;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-#landing h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,7vw,3.2rem);font-weight:900;color:white;line-height:1.1;margin-bottom:8px}
-#landing h1 em{font-style:italic;color:#f4c55a;font-weight:400}
-#landing p{font-size:.95rem;color:rgba(255,255,255,.6);margin-bottom:32px;line-height:1.6}
-.config-warn{background:rgba(244,197,66,.12);border:1px solid rgba(244,197,66,.3);border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:left;display:none}
-.config-warn p{font-size:.78rem;color:#f4c55a;margin:0;line-height:1.5}
-.config-warn strong{color:#ffd95a}
-.already-done{display:none;background:rgba(82,217,160,.1);border:1px solid rgba(82,217,160,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;text-align:left}
-.already-done p{font-size:.82rem;color:rgba(82,217,160,.9);line-height:1.5;margin:0}
-.who-label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;text-align:left}
-.who-select{width:100%;padding:16px 20px;border-radius:14px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.5)' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;margin-bottom:16px;transition:border-color .2s}
-.who-select:focus{outline:none;border-color:#f4c55a}
-.who-select option{background:#1a2744;color:white}
-.start-btn{width:100%;padding:18px;border-radius:14px;background:var(--red);color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(200,51,42,.4)}
-.start-btn:hover{background:#a8291f;transform:translateY(-2px)}
-.start-btn:disabled{background:rgba(255,255,255,.15);box-shadow:none;transform:none;cursor:not-allowed;color:rgba(255,255,255,.4)}
-
-/* ── QUIZ ── */
-#quiz{min-height:100vh;display:none}
-#quiz.active{display:block}
-.quiz-top{background:var(--navy);padding:20px 20px 0;position:sticky;top:0;z-index:50}
-.quiz-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.quiz-who-name{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.7)}
-.quiz-who-name span{color:#f4c55a}
-.quiz-counter{font-size:.78rem;color:rgba(255,255,255,.4);font-weight:600}
-.progress-wrap{height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-bottom:-2px}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),#f4c55a);border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1);width:0%}
-.quiz-body{max-width:560px;margin:0 auto;padding:28px 16px 80px}
-.q-card{display:none;animation:qIn .3s ease}
-.q-card.active{display:block}
-@keyframes qIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.q-section-tag{display:inline-flex;align-items:center;gap:5px;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:6px;padding:4px 10px;margin-bottom:10px}
-.tag-whole{background:var(--red-soft);color:var(--red)}
-.tag-parents{background:var(--gold-soft);color:var(--gold)}
-.tag-couple{background:var(--mint-soft);color:var(--mint)}
-.tag-brothers{background:var(--sky-soft);color:var(--sky)}
-.tag-general{background:var(--surface2);color:var(--muted)}
-.q-num{font-size:.68rem;font-weight:700;color:var(--light);letter-spacing:.1em;margin-bottom:4px}
-.q-text{font-family:'Fraunces',serif;font-size:1.22rem;font-weight:700;color:var(--navy);line-height:1.4;margin-bottom:20px}
-.options-list{display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
-.opt-btn{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:14px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:600;color:var(--text);cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;transition:all .15s;line-height:1.4}
-.opt-btn:hover{border-color:var(--red);background:var(--red-soft)}
-.opt-btn.selected{border-color:var(--red);background:var(--red-soft)}
-.opt-btn.selected .opt-letter{background:var(--red);color:white}
-.opt-letter{width:26px;height:26px;border-radius:50%;background:var(--surface2);color:var(--muted);font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
-.text-input{width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:500;color:var(--text);background:var(--surface);resize:none;transition:border-color .2s;margin-bottom:24px}
-.text-input:focus{outline:none;border-color:var(--red)}
-.q-nav{display:flex;gap:12px}
-.btn-prev{flex:1;padding:15px;border-radius:13px;background:white;border:2px solid var(--border);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
-.btn-prev:hover{border-color:var(--navy);color:var(--navy)}
-.btn-next{flex:2.5;padding:15px;border-radius:13px;background:var(--navy);border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:800;color:white;cursor:pointer;transition:all .15s}
-.btn-next:hover{background:#0f1a30;transform:translateY(-1px)}
-.btn-next:disabled{background:var(--border);color:var(--light);cursor:not-allowed;transform:none}
-
-/* ── SUBMITTING OVERLAY ── */
-#submitting{display:none;position:fixed;inset:0;background:rgba(26,39,68,.92);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
-#submitting.active{display:flex}
-.spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.15);border-top-color:#f4c55a;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-#submitting p{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:600}
-
-/* ── COMPLETE ── */
-#complete{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;background:var(--navy)}
-#complete.active{display:flex}
-.complete-inner{max-width:400px}
-.complete-inner .big-emoji{font-size:3rem;margin-bottom:16px;display:block}
-.complete-inner h2{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:white;margin-bottom:8px}
-.complete-inner p{font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:28px;line-height:1.6}
-.complete-btns{display:flex;flex-direction:column;gap:10px;width:100%}
-.btn-home{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);padding:14px;border-radius:13px;border:1.5px solid rgba(255,255,255,.15);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s}
-.btn-home:hover{background:rgba(255,255,255,.12)}
-
-/* ── ERROR ── */
-#error-screen{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;background:var(--navy)}
-#error-screen.active{display:flex}
-.error-inner{max-width:420px}
-.error-inner .e-icon{font-size:2.5rem;margin-bottom:16px;display:block}
-.error-inner h2{font-family:'Fraunces',serif;font-size:1.6rem;color:white;margin-bottom:10px}
-.error-inner p{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:6px}
-.error-code{background:rgba(255,255,255,.06);border-radius:8px;padding:10px 14px;font-size:.78rem;color:rgba(255,255,255,.35);font-family:monospace;margin:12px 0 24px;text-align:left;word-break:break-all}
-.btn-retry{background:var(--red);color:white;padding:14px 28px;border-radius:13px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;margin-right:8px}
-
-@media(max-width:400px){.q-text{font-size:1.08rem}}
+:root{--ink:#0e0c0a;--cream:#f7f3ec;--warm:#ede8df;--red:#c0392b;--gold:#d4941a;--gold2:#f0b429;--navy:#1a2744;--blue:#2c5f8a;--teal:#1a6b5c;--green:#2d6a4f;--purple:#5e3a8c;--orange:#c0581a;--muted:#7a7060;--border:#ddd6c8}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink)}
+.masthead{background:var(--navy);color:white;padding:44px 20px 32px;text-align:center;position:relative;overflow:hidden}
+.masthead::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 15% 50%,rgba(192,57,43,.2) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 85% 30%,rgba(212,148,26,.14) 0%,transparent 60%)}
+.mi{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.eye{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px}
+.masthead h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,8vw,4rem);font-weight:900;line-height:1.05;color:white;margin-bottom:6px}
+.masthead h1 em{font-style:italic;color:var(--gold2);font-weight:400}
+.msub{font-size:.92rem;color:rgba(255,255,255,.48);margin-bottom:22px}
+.gpills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px}
+.gp{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:99px;padding:5px 11px;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.7)}
+.gp .d{width:7px;height:7px;border-radius:50%}
+.flags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.fl{border-radius:7px;padding:5px 10px;font-size:.71rem;font-weight:700}
+.flr{background:rgba(192,57,43,.2);border:1px solid rgba(192,57,43,.32);color:#ffb3ae}
+.flg{background:rgba(212,148,26,.16);border:1px solid rgba(212,148,26,.28);color:#ffd87a}
+.flt{background:rgba(26,107,92,.2);border:1px solid rgba(26,107,92,.32);color:#80f0e0}
+.tnav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:2px solid rgba(255,255,255,.07);overflow-x:auto;scrollbar-width:none}
+.tnav::-webkit-scrollbar{display:none}
+.tni{display:flex;min-width:max-content;padding:0 8px}
+.tb{padding:12px 15px;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.38);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .18s}
+.tb:hover{color:rgba(255,255,255,.72)}
+.tb.active{color:white;border-bottom-color:var(--gold2)}
+.tb .ti{display:block;font-size:.9rem;margin-bottom:1px;text-align:center}
+.panel{display:none;max-width:860px;margin:0 auto;padding:22px 14px 80px}
+.panel.active{display:block}
+.sh{display:flex;align-items:center;gap:9px;margin:26px 0 13px}
+.shl{flex:1;height:1px;background:var(--border)}
+.sh h2{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.dc{background:white;border-radius:16px;border:1px solid var(--border);margin-bottom:16px;overflow:hidden;box-shadow:0 2px 9px rgba(0,0,0,.05)}
+.dh{padding:14px 16px 11px;background:var(--navy);color:white;display:flex;align-items:center;gap:11px}
+.dbadge{width:46px;height:46px;border-radius:9px;background:var(--red);color:white;font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dt{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;line-height:1.2}
+.ds{font-size:.72rem;color:rgba(255,255,255,.48);margin-top:1px}
+.dd{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.3);text-align:right;flex-shrink:0}
+.db{padding:13px}
+.tl{font-size:.58rem;font-weight:800;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px 2px;display:flex;align-items:center;gap:6px}
+.tl::after{content:'';flex:1;height:1px;background:var(--border)}
+.ac{display:grid;grid-template-columns:40px 1fr;gap:9px;padding:10px 11px;border-radius:10px;margin-bottom:6px;border-left:3px solid transparent;transition:transform .13s}
+.ac:hover{transform:translateX(2px)}
+.ac.grp{border-left-color:var(--red);background:#fef9f9}
+.ac.par{border-left-color:var(--gold);background:#fdf9ee}
+.ac.cpl{border-left-color:var(--teal);background:#f0faf8}
+.ac.bro{border-left-color:var(--blue);background:#f0f5fc}
+.ac.ava{border-left-color:var(--purple);background:#f8f0ff}
+.ac.food{border-left-color:var(--orange);background:#fdf6ef}
+.ac.free{border-left-color:var(--green);background:#f0f7f4}
+.ai{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.grp .ai{background:#fde8e8}.par .ai{background:#fdefd8}.cpl .ai{background:#d8f4ef}
+.bro .ai{background:#d8e8f8}.ava .ai{background:#ede0ff}.food .ai{background:#fde8d8}.free .ai{background:#d8f0e8}
+.at{font-size:.86rem;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.3}
+.ad{font-size:.74rem;color:#6b6050;line-height:1.5}
+.atgs{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.atg{font-size:.58rem;font-weight:700;border-radius:4px;padding:2px 5px}
+.ttime{background:var(--warm);color:var(--muted)}.tbook{background:#fee;color:var(--red)}
+.tfree{background:#e8f7f0;color:var(--green)}.twarn{background:#fff3cd;color:#7a5c00}
+.tgf{background:#e8f4fd;color:var(--blue)}.tpreg{background:#fde8f4;color:#a0287a}
+.note{border-radius:10px;padding:11px 13px;margin-bottom:13px;font-size:.78rem;line-height:1.55}
+.nr{background:#fef3f3;border:1px solid #fcc}.ng{background:#fffbf0;border:1px solid #f0d99a}
+.nt{background:#f0faf8;border:1px solid #a0ddd0}.nb{background:#f0f5fc;border:1px solid #b0c8e8}
+.note strong{font-weight:700}
+.egrid{display:grid;gap:11px}
+.ec{background:white;border-radius:13px;border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 7px rgba(0,0,0,.04);display:grid;grid-template-columns:6px 1fr}
+.es{background:var(--red)}.es.g{background:var(--gold)}.es.t{background:var(--teal)}
+.es.p{background:var(--purple)}.es.b{background:var(--blue)}.es.gr{background:var(--green)}
+.ei{padding:13px}
+.etop{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:6px}
+.en{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);line-height:1.2}
+.edt{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:var(--warm);color:var(--muted);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0}
+.ed{font-size:.78rem;color:#6b6050;line-height:1.52;margin-bottom:8px}
+.etgs{display:flex;flex-wrap:wrap;gap:4px}
+.etg{font-size:.63rem;font-weight:700;border-radius:4px;padding:2px 6px}
+.etfr{background:#e8f7f0;color:var(--green)}.ettk{background:#fee8e8;color:var(--red)}
+.etal{background:#e8f0fe;color:var(--blue)}.etou{background:#e8faf4;color:var(--teal)}
+.etbk{background:#fff3cd;color:#7a5c00}
+.vg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:11px}
+.vc{background:white;border-radius:12px;border:1px solid var(--border);padding:13px;box-shadow:0 2px 6px rgba(0,0,0,.04);transition:transform .13s,box-shadow .13s}
+.vc:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.09)}
+.vt{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.vi{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.vn{font-size:.88rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1px}
+.vsb{font-size:.68rem;color:var(--muted);font-weight:500}
+.vd{font-size:.74rem;color:#6b6050;line-height:1.5;margin-bottom:8px}
+.vtgs{display:flex;flex-wrap:wrap;gap:3px}
+.vtg{font-size:.58rem;font-weight:700;border-radius:4px;padding:2px 5px}
+.vgf{background:#e8f4fd;color:var(--blue)}.vpr{background:#fde8f4;color:#a0287a}
+.vbf{background:#fff8e8;color:var(--orange)}.vlu{background:#e8f8e8;color:var(--green)}
+.vdi{background:#f3e8ff;color:var(--purple)}.vbk{background:#fee8e8;color:var(--red)}
+.vpa{background:#e8f7f0;color:var(--teal)}.vpx{background:var(--warm);color:var(--muted)}
+.stabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.stab{padding:6px 12px;border-radius:99px;border:1.5px solid var(--border);background:white;font-family:'Barlow',sans-serif;font-size:.74rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .13s}
+.stab:hover{border-color:var(--navy);color:var(--navy)}
+.stab.active{background:var(--navy);border-color:var(--navy);color:white}
+.sp{display:none}.sp.active{display:block}
+.wleg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.wl{display:flex;align-items:center;gap:4px;font-size:.71rem;font-weight:600;color:var(--muted)}
+.wd{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+@media(max-width:480px){.masthead h1{font-size:2rem}.vg{grid-template-columns:1fr}.dd{display:none}}
 </style>
 </head>
 <body>
+<div class="masthead"><div class="mi">
+<div class="eye">🍁 Sailor Family Trip Guide</div>
+<h1>Montréal<br><em>June 13–20</em><br>2026</h1>
+<p class="msub">Drive up Saturday · 6 nights · Drive home Saturday · 5 travelers</p>
+<div class="gpills">
+<div class="gp"><div class="d" style="background:#e74c3c"></div>Jonathan + Ava</div>
+<div class="gp"><div class="d" style="background:#d4941a"></div>Lynda (Mom)</div>
+<div class="gp"><div class="d" style="background:#1a6b5c"></div>Nick + Danielle</div>
+</div>
+<div class="flags">
+<div class="fl flg">🎵 Les Francos de Montréal — ENTIRE WEEK · Free outdoor concerts every night</div>
+<div class="fl flr">🎪 Cirque du Soleil ECHO — Old Port · Through June 28 · BOOK NOW</div>
+<div class="fl flr">🤰 Danielle: 6 months pregnant · No rafting · Gluten-free · No raw fish · No deli meats · 3 meals/day</div>
+<div class="fl flt">🎨 MURAL murals freshly painted on Saint-Laurent Blvd · Free all week</div>
+</div>
+</div></div>
 
-<div id="submitting">
-  <div class="spinner"></div>
-  <p>Saving your answers to Google Sheets…</p>
+<div class="tnav"><div class="tni">
+<button class="tb active" onclick="showTab('sched',this)"><span class="ti">📅</span>Schedules</button>
+<button class="tb" onclick="showTab('events',this)"><span class="ti">⭐</span>Events</button>
+<button class="tb" onclick="showTab('food',this)"><span class="ti">🍽️</span>Restaurants</button>
+<button class="tb" onclick="showTab('museums',this)"><span class="ti">🏛️</span>Museums</button>
+<button class="tb" onclick="showTab('outdoor',this)"><span class="ti">🌿</span>Outdoor</button>
+<button class="tb" onclick="showTab('acts',this)"><span class="ti">⚡</span>Activities</button>
+<button class="tb" onclick="showTab('shop',this)"><span class="ti">🛍️</span>Shopping</button>
+<button class="tb" onclick="showTab('culture',this)"><span class="ti">🎭</span>Culture</button>
+<button class="tb" onclick="showTab('practical',this)"><span class="ti">🗺️</span>Practical</button>
+</div></div>
+
+<!-- ===== SCHEDULES TAB ===== -->
+<div class="panel active" id="tab-sched">
+<div class="wleg" style="margin-top:20px">
+<div class="wl"><div class="wd" style="background:#c0392b"></div>Whole Group</div>
+<div class="wl"><div class="wd" style="background:#d4941a"></div>Lynda</div>
+<div class="wl"><div class="wd" style="background:#1a6b5c"></div>Nick+Danielle</div>
+<div class="wl"><div class="wd" style="background:#2c5f8a"></div>Brothers</div>
+<div class="wl"><div class="wd" style="background:#5e3a8c"></div>Jonathan+Ava</div>
+<div class="wl"><div class="wd" style="background:#c0581a"></div>Food</div>
+<div class="wl"><div class="wd" style="background:#2d6a4f"></div>Free/Flex</div>
+</div>
+<div class="stabs">
+<button class="stab active" onclick="showSub('sched','full',this)">🗓 Full Group</button>
+<button class="stab" onclick="showSub('sched','lynda',this)">👵 Lynda</button>
+<button class="stab" onclick="showSub('sched','couple',this)">💑 Nick &amp; Danielle</button>
+<button class="stab" onclick="showSub('sched','ava',this)">🎢 Jonathan &amp; Ava</button>
+<button class="stab" onclick="showSub('sched','bros',this)">👬 Brothers</button>
 </div>
 
-<!-- LANDING -->
-<div id="landing" class="active">
-  <div class="land-inner">
-    <span class="maple">🍁</span>
-    <h1>Montréal<br><em>Family Trip</em><br>June 13–20</h1>
-    <p>Jonathan is planning the trip and wants to know what <em>you</em> want. 25 questions — no wrong answers!</p>
+<div class="sp active" id="sched-full">
+<div class="note ng"><strong>Planning approach:</strong> Slow mornings (Lynda + Danielle peak afternoons), Danielle protected from high-impact, group dinners 4–5 nights, Francos free stage every evening, sub-groups split mornings so everyone gets what they asked for.</div>
 
-    <div class="config-warn" id="configWarning">
-      <p>⚠️ <strong>Setup needed:</strong> The Google Sheets URL hasn't been configured yet. Jonathan needs to follow the setup steps before responses can be saved.</p>
-    </div>
+<div class="dc">
+<div class="dh"><div class="dbadge">13</div><div><div class="dt">Arrive · Old Montreal First Look</div><div class="ds">Check in · orient · Francos opening night</div></div><div class="dd">SAT JUN 13</div></div>
+<div class="db">
+<div class="tl">Afternoon</div>
+<div class="ac grp"><div class="ai">🚗</div><div><div class="at">Check in, hotel, freshen up</div><div class="ad">Aim for downtown or Old Montreal — walking distance to Place des Festivals saves metro rides all week.</div><div class="atgs"><span class="atg ttime">~2–4 PM</span></div></div></div>
+<div class="ac grp"><div class="ai">🚶</div><div><div class="at">First walk — Old Montreal orientation</div><div class="ad">45-min easy loop: Rue Saint-Paul, Place Jacques-Cartier, Old Port waterfront. Completely flat. Good for everyone. Street performers warming up for Francos opening weekend.</div><div class="atgs"><span class="atg tfree">Free</span><span class="atg ttime">4–5:30 PM</span></div></div></div>
+<div class="tl">Evening</div>
+<div class="ac food"><div class="ai">🍽️</div><div><div class="at">Group dinner — Old Montreal</div><div class="ad">First night together. Terrace if weather allows. See Restaurants tab — confirm GF for Danielle. Let everyone try ordering in French.</div><div class="atgs"><span class="atg ttime">6:30 PM</span><span class="atg tgf">GF needed</span><span class="atg tbook">Reserve ahead</span></div></div></div>
+<div class="ac free"><div class="ai">🎵</div><div><div class="at">Les Francos — Opening Night, Place des Festivals (FREE)</div><div class="ad">World's largest French-language music festival opens tonight. Free outdoor stage, thousands of Montrealers, street performers everywhere. 10-min walk from Old Montreal. Find Danielle a comfortable standing or seating spot.</div><div class="atgs"><span class="atg tfree">Free outdoor stage</span><span class="atg ttime">8 PM+</span></div></div></div>
+</div></div>
 
-    <div class="already-done" id="alreadyDone">
-      <p>✅ <strong id="alreadyName"></strong>, you already submitted your answers! You can retake below if you want to update anything.</p>
-    </div>
+<div class="dc">
+<div class="dh"><div class="dbadge">14</div><div><div class="dt">Old Port Thrills + Group Waterfront</div><div class="ds">Adrenaline morning for some · waterfront afternoon for all</div></div><div class="dd">SUN JUN 14</div></div>
+<div class="db">
+<div class="tl">Morning — sub-groups split</div>
+<div class="ac ava"><div class="ai">🚁</div><div><div class="at">Jonathan + Ava: Zipline + Pirate Ropes Course</div><div class="ad">Tyrolienne MTL Zipline (Canada's only urban zipline, Clock Tower over St. Lawrence) then Voiles en Voiles pirate aerial ropes course. Full adrenaline morning. Book both ahead.</div><div class="atgs"><span class="atg tbook">Book: tyroliennemtl.com + voilesenvoiles.ca</span><span class="atg twarn">Not for Danielle/Lynda</span></div></div></div>
+<div class="ac cpl"><div class="ai">☕</div><div><div class="at">Nick + Danielle: Terrace café breakfast, Old Montreal</div><div class="ad">Danielle needs to eat — don't skip this. Rue Saint-Paul terrace. Leisurely French morning while Ava does adrenaline activities.</div><div class="atgs"><span class="atg tgf">Ask about GF options</span><span class="atg tpreg">Danielle must eat breakfast</span></div></div></div>
+<div class="ac par"><div class="ai">🌅</div><div><div class="at">Lynda: Sleep in — join at noon</div><div class="ad">Lynda peaks in the afternoon. No early pressure. Hotel breakfast, relax, meet everyone at the waterfront by noon.</div><div class="atgs"><span class="atg ttime">Morning off</span></div></div></div>
+<div class="tl">Afternoon — everyone together</div>
+<div class="ac grp"><div class="ai">🌀</div><div><div class="at">La Grande Roue de Montréal — whole family</div><div class="ad">Canada's tallest Ferris wheel (197 ft), glass floors, skyline panorama Ava asked for. Accessible + seated — perfect for Danielle and Lynda. Book online to skip lines on Sunday.</div><div class="atgs"><span class="atg tbook">Book online</span><span class="atg tpreg">Pregnancy safe — seated</span></div></div></div>
+<div class="ac food"><div class="ai">🍽️</div><div><div class="at">Group lunch — Old Port waterfront</div><div class="ad">Boardwalk has lots of options. Danielle needs proper lunch. See Restaurants tab for GF picks. Outdoor seating everywhere in June.</div><div class="atgs"><span class="atg ttime">1:30 PM</span><span class="atg tgf">GF needed</span></div></div></div>
+<div class="ac grp"><div class="ai">🚶</div><div><div class="at">Old Port boardwalk stroll — optional Bixi bikes for active ones</div><div class="ad">Flat boardwalk ideal for Danielle + Lynda. Others can rent Bixi bikes. Same area, natural split, easy to reconnect. 2–5 PM free time.</div><div class="atgs"><span class="atg tfree">Walking free</span></div></div></div>
+<div class="tl">Evening</div>
+<div class="ac food"><div class="ai">🍽️</div><div><div class="at">Splurge group dinner — Toqué! or Garde Manger</div><div class="ad">Jonathan's requested high-end group dinner. Sunday fresh-arrival energy is perfect. Toqué! largely GF, Garde Manger convivial and fun. Both require advance reservation.</div><div class="atgs"><span class="atg tbook">Reserve now — 2–3 weeks ahead</span><span class="atg tgf">Confirm GF at booking</span></div></div></div>
+<div class="ac free"><div class="ai">🎵</div><div><div class="at">Francos Night 2 (+ Tam-Tams drum circle at Mont Royal earlier ~11 AM)</div><div class="ad">Sunday night Francos is electric. Bonus: the Tam-Tams spontaneous drum circle at the Cartier Monument at Mont Royal runs Sunday afternoons — worth a detour.</div><div class="atgs"><span class="atg tfree">Both free</span></div></div></div>
+</div></div>
 
-    <label class="who-label">Who are you?</label>
-    <select class="who-select" id="personSelect" onchange="onPersonChange()">
-      <option value="">— Select your name —</option>
-      <option value="Jonathan">Jonathan (trip planner &amp; dad)</option>
-      <option value="Lynda">Lynda (mom)</option>
-      <option value="Nick">Nick (Jonathan's brother)</option>
-      <option value="Danielle">Danielle (Nick's wife)</option>
-    </select>
+<div class="dc">
+<div class="dh"><div class="dbadge">15</div><div><div class="dt">Mont Royal + Plateau Neighbourhood</div><div class="ds">The hike Ava asked for · boutique shopping · everyone's favourite area</div></div><div class="dd">MON JUN 15</div></div>
+<div class="db">
+<div class="tl">Morning — split</div>
+<div class="ac ava"><div class="ai">🏔️</div><div><div class="at">Jonathan + Ava + Nick: Mont Royal hike — Belvédère Kondiaronk summit</div><div class="ad">Ava named this. 8:30 AM start for cool air + fewer people. Summit lookout gives the panoramic city view she wanted. Nick joins. ~90 min round trip.</div><div class="atgs"><span class="atg tfree">Free</span><span class="atg ttime">8:30–10:30 AM</span><span class="atg twarn">Hills — Danielle + Lynda skip</span></div></div></div>
+<div class="ac par"><div class="ai">☕</div><div><div class="at">Lynda + Danielle: Plateau café morning, Mont-Royal Ave</div><div class="ad">Both asked for this. Leisurely terrace on Montreal's most beautiful avenue while hikers are on the mountain. Flat, beautiful, their perfect pace. Danielle eats breakfast here.</div><div class="atgs"><span class="atg tgf">Many GF options</span><span class="atg ttime">9–11 AM</span></div></div></div>
+<div class="tl">Mid-morning — reunite</div>
+<div class="ac grp"><div class="ai">🥯</div><div><div class="at">Fairmount Bagels — legendary wood-fired Montreal bagels</div><div class="ad">10-min walk from the mountain. A Montreal food bucket-list moment. Note: standard bagels contain gluten — Danielle skips or grabs GF food at Arepera du Plateau (5 min walk).</div><div class="atgs"><span class="atg ttime">11 AM</span><span class="atg twarn">Danielle: skip or find GF nearby</span></div></div></div>
+<div class="ac grp"><div class="ai">🛍️</div><div><div class="at">Plateau boutiques — Mont-Royal Ave + Saint-Denis St</div><div class="ad">Best independent shopping in Montreal. Local designers, vintage, indie fashion, records, art prints. No chains. Flat terrain, café stops every block. Danielle + Ava + Lynda's paradise. Budget 2–3 hours.</div><div class="atgs"><span class="atg ttime">Noon–3 PM</span></div></div></div>
+<div class="tl">Afternoon</div>
+<div class="ac free"><div class="ai">🌳</div><div><div class="at">Parc La Fontaine — rest in the sun</div><div class="ad">Beautiful Plateau park. Lake, paddle boats, benches, street performers. Flat, accessible. Danielle and Lynda sit while others explore. Perfect afternoon wind-down.</div><div class="atgs"><span class="atg tfree">Free</span><span class="atg tpreg">Flat — pregnancy ideal</span></div></div></div>
+<div class="tl">Evening</div>
+<div class="ac food"><div class="ai">🍽️</div><div><div class="at">Group dinner — Plateau (L'Express or similar)</div><div class="ad">Classic brasserie atmosphere. Book ahead. GF options available — confirm with server. See Restaurants tab.</div><div class="atgs"><span class="atg tgf">GF needed</span><span class="atg tbook">Reserve</span></div></div></div>
+<div class="ac free"><div class="ai">🎵</div><div><div class="at">Francos Night 3 + optional late poutine at La Banquise</div><div class="ad">Free stage then La Banquise for late poutine (open 24h, classic gravy is corn-starch based — confirm GF with Danielle). 10-min walk from the Francos stage.</div><div class="atgs"><span class="atg tfree">Stage free</span></div></div></div>
+</div></div>
 
-    <button class="start-btn" id="startBtn" disabled onclick="startQuiz()">Start My Quiz →</button>
-  </div>
+<div class="dc">
+<div class="dh"><div class="dbadge">16</div><div><div class="dt">Olympic Park + Cirque du Soleil</div><div class="ds">Sub-groups morning · Cirque ECHO whole family evening</div></div><div class="dd">TUE JUN 16</div></div>
+<div class="db">
+<div class="tl">Morning — sub-groups</div>
+<div class="ac ava"><div class="ai">🏟️</div><div><div class="at">Jonathan + Ava: Olympic Park Tower + Biodôme</div><div class="ad">Inclined funicular to the observation deck of the world's tallest leaning tower. Then Biodôme (5 ecosystems, penguins, tropical birds, otters) right next door.</div><div class="atgs"><span class="atg ttime">9 AM</span></div></div></div>
+<div class="ac cpl"><div class="ai">🌿</div><div><div class="at">Nick + Danielle: Montreal Botanical Garden</div><div class="ad">185-acre garden at peak June bloom. Japanese + Chinese gardens are spectacular. Fully flat accessible paths. Peaceful, romantic, pregnancy-perfect. A morning just for them.</div><div class="atgs"><span class="atg tpreg">Pregnancy ideal</span><span class="atg ttime">9–11:30 AM</span></div></div></div>
+<div class="ac par"><div class="ai">🏛️</div><div><div class="at">Lynda: Pointe-à-Callière Museum, Old Montreal</div><div class="ad">Built over Montreal's 1642 founding site — glass floors above the original settlement. Lynda loves Old Montreal + history. Accessible, climate-controlled, fascinating.</div><div class="atgs"><span class="atg ttime">10 AM–Noon</span></div></div></div>
+<div class="tl">Afternoon</div>
+<div class="ac food"><div class="ai">🍜</div><div><div class="at">Group lunch — Chinatown or downtown</div><div class="ad">Pho and rice dishes naturally GF for Danielle. Casual, affordable, good for a midday break before the big evening.</div><div class="atgs"><span class="atg tgf">Pho/rice GF — confirm broths</span></div></div></div>
+<div class="ac free"><div class="ai">😴</div><div><div class="at">Afternoon rest — prepare for Cirque</div><div class="ad">Show runs ~2.5 hours. Rest, snack, dress up if you like. Don't be tired going in. This is the biggest evening of the trip.</div><div class="atgs"><span class="atg ttime">2–5:30 PM</span></div></div></div>
+<div class="tl">Evening — The Big Event</div>
+<div class="ac grp"><div class="ai">🎪</div><div><div class="at">🌟 CIRQUE DU SOLEIL ECHO — Whole Family</div><div class="ad">Cirque was born in Montreal. ECHO runs at the Old Port Big Top through June 28. Full show: aerialists, acrobats, live music, stunning staging. Pregnancy-safe (seated). Perfect for every age. BOOK AT cirquedusoleil.com — summer shows sell out weeks ahead.</div><div class="atgs"><span class="atg tbook">⚠️ BOOK NOW — MOST URGENT</span><span class="atg tpreg">Seated — pregnancy safe</span></div></div></div>
+</div></div>
+
+<div class="dc">
+<div class="dh"><div class="dbadge">17</div><div><div class="dt">Lachine Water Adventures + Canal Picnic</div><div class="ds">Rafting for some · Kayaking for Danielle · Canal afternoon for all</div></div><div class="dd">WED JUN 17</div></div>
+<div class="db">
+<div class="note nr"><strong>Critical split:</strong> Danielle cannot do whitewater rafting at 6 months pregnant. She asked to kayak — KSF Outdoor on the Lachine Canal is flatwater and pregnancy-safe. Nick decides the night before: join the rafting group OR stay with Danielle for kayaking.</div>
+<div class="tl">Morning — split by activity</div>
+<div class="ac ava"><div class="ai">🌊</div><div><div class="at">Jonathan + Ava + Nick (optional) + Dad: Lachine Rapids Rafting</div><div class="ad">Class 2–3 whitewater on the St. Lawrence River with the Montreal skyline behind you the whole time. Ava's "can't do anywhere else" moment. ~2 hours. Book at clubraft.com.</div><div class="atgs"><span class="atg tbook">clubraft.com</span><span class="atg twarn">NOT for Danielle</span></div></div></div>
+<div class="ac cpl"><div class="ai">🛶</div><div><div class="at">Danielle (+ Nick if staying): Lachine Canal Flatwater Kayaking</div><div class="ad">Danielle specifically requested kayaking — this is it. KSF Outdoor, calm flatwater, safe at 6 months. Beautiful canal. Mention pregnancy when booking. Her personal trip highlight.</div><div class="atgs"><span class="atg tbook">ksfoutdoor.com · mention pregnancy</span><span class="atg tpreg">Pregnancy safe</span></div></div></div>
+<div class="ac par"><div class="ai">☀️</div><div><div class="at">Lynda: Atwater Market wander</div><div class="ad">Beautiful canal-side market. Lynda at her own pace — cheese, pastries, vendors, canal seating — while others do water sports. Then everyone meets for the picnic lunch.</div><div class="atgs"><span class="atg tfree">Free to browse</span></div></div></div>
+<div class="tl">Afternoon — everyone reunites</div>
+<div class="ac grp"><div class="ai">🧺</div><div><div class="at">Atwater Market picnic lunch by the Lachine Canal</div><div class="ad">Supplies from the market — cheese, GF bread options, charcuterie (Danielle: hot smoked OK, skip packaged deli), fresh fruit. Eat canal-side. One of Montreal's most beautiful settings.</div><div class="atgs"><span class="atg tgf">GF artisan vendors at market</span></div></div></div>
+<div class="ac grp"><div class="ai">🚲</div><div><div class="at">Canal bike ride (Bixi) or walk — flat all the way</div><div class="ad">11 km completely flat canal path. Bixi bikes at stations everywhere. Danielle can walk or try an e-bike. Natural split for those who want to go further.</div><div class="atgs"><span class="atg tfree">Walking free</span><span class="atg tpreg">E-bike OK for Danielle</span></div></div></div>
+<div class="ac free"><div class="ai">🌿</div><div><div class="at">Hotel rest — 2:30–5:30 PM</div><div class="ad">Big active morning. Danielle especially needs this. No agenda.</div></div></div>
+<div class="tl">Evening</div>
+<div class="ac food"><div class="ai">🍽️</div><div><div class="at">Group dinner</div><div class="ad">Medium-key restaurant after a physical day. GF needed. Check Restaurants tab.</div><div class="atgs"><span class="atg tgf">GF needed</span></div></div></div>
+<div class="ac free"><div class="ai">🎵</div><div><div class="at">Francos Night 5 — free outdoor stage</div><div class="atgs"><span class="atg tfree">Free</span></div></div></div>
+</div></div>
+
+<div class="dc">
+<div class="dh"><div class="dbadge">18</div><div><div class="dt">Ava's Choice Day + MURAL Walk + Pierre Lapointe</div><div class="ds">She controls her agenda · addresses boredom worry · Francos headliner tonight</div></div><div class="dd">THU JUN 18</div></div>
+<div class="db">
+<div class="tl">Morning — Ava picks one activity</div>
+<div class="ac ava"><div class="ai">🎯</div><div><div class="at">Ava's Choice — show her these options the night before</div><div class="ad"><strong>A:</strong> SAT Satosphere — 360° immersive audiovisual dome (sat.qc.ca) · <strong>B:</strong> Free-roam VR experience, downtown · <strong>C:</strong> TOHU Circus Arts Center — Cirque's sister venue · <strong>D:</strong> BATL Axe Throwing + escape room combo. Her pick, her day.</div><div class="atgs"><span class="atg twarn">Full control — combats her boredom worry</span></div></div></div>
+<div class="tl">Afternoon — group</div>
+<div class="ac grp"><div class="ai">🎨</div><div><div class="at">MURAL Festival street art walk — Saint-Laurent Blvd</div><div class="ad">Freshly painted building-sized murals from the June 4–14 MURAL Festival. Free, flat terrain, ~1.5 hrs Sherbrooke to Mont-Royal Ave. Ava + Danielle both asked for art. Lynda likes neighbourhood wandering. GF cafés the whole way.</div><div class="atgs"><span class="atg tfree">Free</span><span class="atg tpreg">Flat — pregnancy ideal</span></div></div></div>
+<div class="ac free"><div class="ai">🥐</div><div><div class="at">French language challenge — everyone orders at a boulangerie in French</div><div class="ad">Ava, Danielle, and Lynda all said they want this. "Un café au lait et un croissant, s'il vous plaît." Help them practice. Small ritual, big memory.</div><div class="atgs"><span class="atg tfree">Free</span></div></div></div>
+<div class="tl">Evening</div>
+<div class="ac food"><div class="ai">🍽️</div><div><div class="at">Ava picks the restaurant — full autonomy</div><div class="ad">Show her the Restaurants tab options, she chooses where the group eats. She asked for great atmosphere. Full autonomy.</div><div class="atgs"><span class="atg tgf">GF needed</span></div></div></div>
+<div class="ac free"><div class="ai">🎵</div><div><div class="at">Pierre Lapointe — Francos (ticketed at Place des Arts) + free outdoor stage</div><div class="ad">Québec's most celebrated singer-songwriter tonight. Ticketed indoor show available OR free outdoor stage for everyone else.</div><div class="atgs"><span class="atg tbook">Indoor ticketed</span><span class="atg tfree">Outdoor free</span></div></div></div>
+</div></div>
+
+<div class="dc">
+<div class="dh"><div class="dbadge">19</div><div><div class="dt">Jean-Talon Market + Brothers Time + Cœur de Pirate</div><div class="ds">Best market · final brothers window · biggest Francos night of the trip</div></div><div class="dd">FRI JUN 19</div></div>
+<div class="db">
+<div class="tl">Morning</div>
+<div class="ac grp"><div class="ai">🏪</div><div><div class="at">Jean-Talon Market — whole group</div><div class="ad">One of the best outdoor markets in North America. Local produce, Quebec cheese, GF crêpe kiosk, artisan vendors. Great for everyone. GF options clearly available throughout including a fully GF crêperie (La Crêperie du Marché).</div><div class="atgs"><span class="atg tfree">Free to browse</span><span class="atg tgf">Multiple GF vendors</span><span class="atg ttime">9:30–11:30 AM</span></div></div></div>
+<div class="tl">Afternoon — sub-groups</div>
+<div class="ac bro"><div class="ai">🪓</div><div><div class="at">Jonathan + Nick: Brothers afternoon — Nick picks</div><div class="ad">Last dedicated brothers window. Options: BATL Axe Throwing downtown (~1.5 hrs), the whisky bar Nick mentioned (Atwater Cocktail Club or Le Mal Nécessaire), or a long lunch just the two of them somewhere special. Nick decides.</div><div class="atgs"><span class="atg ttime">1–4 PM</span></div></div></div>
+<div class="ac cpl"><div class="ai">💆</div><div><div class="at">Danielle + Lynda: Spa or café afternoon</div><div class="ad">Most Montreal spas offer prenatal massage — perfect for Danielle at 6 months. Lynda can get a treatment too or they can share a long café afternoon. Exactly how both of them recharge.</div><div class="atgs"><span class="atg tpreg">Prenatal massage available</span></div></div></div>
+<div class="tl">Evening — Best night of the week</div>
+<div class="ac food"><div class="ai">🍽️</div><div><div class="at">Early group dinner — 6 PM, near Quartier des Spectacles</div><div class="ad">Eat early so everyone makes Cœur de Pirate. Quick but good — something close to Place des Festivals.</div><div class="atgs"><span class="atg ttime">6 PM</span><span class="atg tgf">GF needed</span></div></div></div>
+<div class="ac grp"><div class="ai">🎵</div><div><div class="at">🌟 Cœur de Pirate — Francos Headliner, FREE outdoor stage</div><div class="ad">The emotional peak of the whole trip. Béatrice Martin is Canada's most beloved francophone pop artist — powerful, beautiful, connects across generations. Free outdoor stage at Place des Festivals. Bring a portable chair for Danielle. This is the night everyone remembers. CHECK fechrancos schedule for exact time (~9 PM).</div><div class="atgs"><span class="atg tfree">FREE</span><span class="atg twarn">⭐ DO NOT MISS THIS NIGHT</span></div></div></div>
+</div></div>
+
+<div class="dc">
+<div class="dh"><div class="dbadge">20</div><div><div class="dt">Departure Morning</div><div class="ds">Final breakfast · drive home</div></div><div class="dd">SAT JUN 20</div></div>
+<div class="db">
+<div class="tl">Morning</div>
+<div class="ac grp"><div class="ai">☕</div><div><div class="at">Final group breakfast — proper farewell sit-down</div><div class="ad">Last morning together. Don't rush it. Outdoor terrace if weather allows. Check Restaurants → Breakfast tab.</div><div class="atgs"><span class="atg ttime">9 AM</span><span class="atg tgf">Confirm GF for Danielle</span></div></div></div>
+<div class="ac grp"><div class="ai">🚗</div><div><div class="at">Drive home — Camp Hill, PA (~7.5 hours)</div><div class="ad">Border at Lacolle/Champlain (I-87). Build in lunch stop. Danielle: rest stop every 90 minutes. Leave by 11 AM for comfortable arrival.</div><div class="atgs"><span class="atg ttime">Depart by 11 AM</span><span class="atg twarn">Danielle: rest stops every 90 min</span></div></div></div>
+</div></div>
+</div><!-- /sched-full -->
+
+<div class="sp" id="sched-lynda">
+<div class="note ng"><strong>Lynda's profile:</strong> Peaks in the afternoon. Flat terrain only. Loves Old Montreal, café mornings, outdoor terraces, slow pace. Will happily go with the group flow — these are her ideal personal moments.</div>
+<div class="egrid">
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Sat Jun 13 PM — First walk, Old Montreal</div><span class="edt">Arrive Day</span></div><div class="ed">Easy cobblestone orientation stroll. Rue Saint-Paul, Place Jacques-Cartier, Old Port. Flat, beautiful, her favorite part of the city. Perfect first impression.</div><div class="etgs"><span class="etg etal">Flat terrain</span><span class="etg etfr">Free</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Sun Jun 14 AM — Café morning while others do adrenaline</div><span class="edt">9–11 AM</span></div><div class="ed">Hotel breakfast or a terrace café in Old Montreal while Ava and Jonathan do the zipline. No agenda — exactly how Lynda said she wants to start her days. Joins the group at the waterfront at noon.</div><div class="etgs"><span class="etg etou">Terrace</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Mon Jun 15 AM — Plateau café with Danielle</div><span class="edt">9–11 AM</span></div><div class="ed">Mont-Royal Avenue terrace while hikers are on the mountain. People-watching, great coffee, leisurely. Then boutique shopping together — both asked for exactly this.</div><div class="etgs"><span class="etg etal">GF options</span><span class="etg etal">Flat terrain</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Tue Jun 16 AM — Pointe-à-Callière Museum</div><span class="edt">10 AM – Noon</span></div><div class="ed">Montreal's history museum built directly over the 1642 founding site. Glass floors above the original settlement. Lynda loves Old Montreal and history — tailored for her. Accessible, climate-controlled.</div><div class="etgs"><span class="etg etal">Accessible</span><span class="etg ettk">Admission</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Wed Jun 17 AM — Atwater Market wander</div><span class="edt">9:30 AM</span></div><div class="ed">While others do water sports, Lynda explores Atwater Market alone at her own pace. Beautiful canal setting, cheese, pastries, flowers. Joins everyone for the canal picnic lunch.</div><div class="etgs"><span class="etg etfr">Free to browse</span><span class="etg etou">Canal-side</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Fri Jun 19 — Jean-Talon Market + spa afternoon</div><span class="edt">Morning + afternoon</span></div><div class="ed">Jean-Talon is one of the best outdoor markets in North America — Lynda will love it. Then a free afternoon with Danielle: spa, café, or hotel rest. Exactly how she said she recharges.</div><div class="etgs"><span class="etg etfr">Market free</span></div></div></div>
+</div></div>
+
+<div class="sp" id="sched-couple">
+<div class="note nt"><strong>Danielle's needs:</strong> 6 months pregnant — no rafting or high-impact. Gluten-free. No raw fish. No processed/deli meats (hot smoked meats like brisket OK). Must eat 3 meals/day. Flat terrain preferred. Peaks in afternoons. Specifically requested kayaking. Wants to be treated normally — she'll speak up if something is too much.</div>
+<div class="egrid">
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">Sun Jun 14 AM — Café breakfast in Old Montreal</div><span class="edt">9–11 AM</span></div><div class="ed">While Ava + Jonathan do adrenaline activities, Nick and Danielle have a proper breakfast on a terrace. Danielle must eat breakfast. Beautiful Rue Saint-Paul. Leisurely French morning.</div><div class="etgs"><span class="etg etal">GF options</span><span class="etg etou">Terrace</span></div></div></div>
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">Mon Jun 15 — Plateau café + boutique shopping</div><span class="edt">9 AM – 3 PM</span></div><div class="ed">Danielle specifically asked for local boutiques. The Plateau is Montreal's best for exactly this. Flat terrain, café stops everywhere. She and Lynda start together.</div><div class="etgs"><span class="etg etal">Flat terrain</span><span class="etg etal">GF cafés</span></div></div></div>
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">Tue Jun 16 AM — Botanical Garden</div><span class="edt">9–11:30 AM</span></div><div class="ed">185-acre garden at peak June bloom. Japanese + Chinese gardens spectacular. Fully flat paths. Peaceful, romantic, completely pregnancy-safe. The couple's morning.</div><div class="etgs"><span class="etg etou">Flat outdoor</span><span class="etg etal">Pregnancy safe</span></div></div></div>
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">🌟 Wed Jun 17 AM — Lachine Canal KAYAKING</div><span class="edt">9–11 AM · ksfoutdoor.com</span></div><div class="ed">Danielle specifically requested kayaking — this is it. KSF Outdoor on the Lachine Canal: flatwater, completely calm, safe at 6 months. Mention pregnancy when booking. Her personal trip highlight.</div><div class="etgs"><span class="etg etbk">Book + mention pregnancy</span><span class="etg etal">Pregnancy safe</span></div></div></div>
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">Thu Jun 18 — MURAL art walk + French café moment</div><span class="edt">Afternoon</span></div><div class="ed">Freshly painted building-sized murals on Saint-Laurent Blvd. Flat, free, her interactive art request. Plus the French language café ordering moment she asked for. Her ideal afternoon.</div><div class="etgs"><span class="etg etfr">Free</span><span class="etg etou">Flat terrain</span></div></div></div>
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">Fri Jun 19 PM — Spa afternoon with Lynda</div><span class="edt">1–4 PM</span></div><div class="ed">Most Montreal spas offer prenatal massage. Perfect for Danielle at 6 months. Lynda joins or they share a long café. A proper afternoon of self-care before Cœur de Pirate night.</div><div class="etgs"><span class="etg etal">Prenatal massage available</span></div></div></div>
+</div>
+<div class="note nb" style="margin-top:14px"><strong>GF restaurant quick-list for Danielle:</strong> Boris Bistro (Old Montreal, fully certified GF) · Arepera du Plateau (100% GF corn arepas) · La Crêperie du Marché Jean-Talon (fully GF) · Modavie (GF poutine, dedicated fryer) · Atwater Market (GF artisan vendors) · Poutineville (GF base) · Toqué! (largely naturally GF tasting menu). Always tell servers about the GF requirement.</div>
 </div>
 
-<!-- QUIZ -->
-<div id="quiz">
-  <div class="quiz-top">
-    <div class="quiz-top-row">
-      <div class="quiz-who-name">Taking quiz: <span id="quizPersonName">—</span></div>
-      <div class="quiz-counter" id="quizCounter">1 / 25</div>
-    </div>
-    <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
-  </div>
-  <div class="quiz-body" id="quizBody"></div>
+<div class="sp" id="sched-ava">
+<div class="note nb"><strong>Ava's profile:</strong> Adrenaline, Mont Royal hike, skyline views, French immersion, interactive art, great dinners, chill hotel evenings. Biggest worry: getting bored. The fix: active mornings, one day she fully controls, and evening choice every night.</div>
+<div class="egrid">
+<div class="ec"><div class="es p"></div><div class="ei"><div class="etop"><div class="en">Sun Jun 14 AM — Zipline + Pirate Ropes Course</div><span class="edt">9–11:30 AM</span></div><div class="ed">Canada's only urban zipline (Clock Tower over the St. Lawrence) + Voiles en Voiles pirate aerial ropes course. Her adrenaline morning. Book both ahead online.</div><div class="etgs"><span class="etg etbk">Book ahead</span></div></div></div>
+<div class="ec"><div class="es p"></div><div class="ei"><div class="etop"><div class="en">Sun Jun 14 PM — La Grande Roue skyline photo</div><span class="edt">~12:30 PM</span></div><div class="ed">197-foot observation Ferris wheel, glass floors, the panoramic city view she specifically asked for. Get it early in the trip.</div><div class="etgs"><span class="etg etbk">Book online</span></div></div></div>
+<div class="ec"><div class="es p"></div><div class="ei"><div class="etop"><div class="en">Mon Jun 15 AM — Mont Royal hike to the summit</div><span class="edt">8:30–10:30 AM</span></div><div class="ed">She named this specifically. Summit lookout for the panoramic city photo. Nick joins. Early start for cool air and fewer crowds. Then Fairmount bagels on the way down.</div><div class="etgs"><span class="etg etfr">Free hike</span></div></div></div>
+<div class="ec"><div class="es p"></div><div class="ei"><div class="etop"><div class="en">Wed Jun 17 AM — Lachine Rapids Rafting</div><span class="edt">9 AM · clubraft.com</span></div><div class="ed">Her "can't do anywhere else" moment. Class 2–3 whitewater on the St. Lawrence with the Montreal skyline visible the whole time. One of the most surreal urban adventures in North America.</div><div class="etgs"><span class="etg etbk">Book at clubraft.com</span></div></div></div>
+<div class="ec"><div class="es p"></div><div class="ei"><div class="etop"><div class="en">Thu Jun 18 — HER DAY: she picks everything</div><span class="edt">All day</span></div><div class="ed">Activity options: SAT Satosphere (360° dome), free-roam VR, TOHU Circus, BATL axe throwing. Then she picks dinner. Full control. This directly addresses her stated biggest worry.</div><div class="etgs"><span class="etg etal">Her full control</span></div></div></div>
+<div class="ec"><div class="es p"></div><div class="ei"><div class="etop"><div class="en">Every evening — Les Francos free outdoor stage</div><span class="edt">After dinner nightly</span></div><div class="ed">Place des Festivals becomes the nightly ritual. Street performers, crowds, French music, food vendors. She wanted French city energy and street performers — this is it every night. By Friday she feels like a local.</div><div class="etgs"><span class="etg etfr">Free every night</span></div></div></div>
+</div></div>
+
+<div class="sp" id="sched-bros">
+<div class="note nb"><strong>Jonathan + Nick windows:</strong> Both want something physical and active. Nick mentioned wanting a whisky bar. Best windows: Monday Mont Royal hike (natural together time), Wednesday Lachine Rapids (Nick's call), or Friday afternoon (dedicated brothers time while Danielle + Lynda spa).</div>
+<div class="egrid">
+<div class="ec"><div class="es b"></div><div class="ei"><div class="etop"><div class="en">Mon Jun 15 AM — Hike Mont Royal together</div><span class="edt">8:30 AM</span></div><div class="ed">The hike is naturally a brothers moment — active, outdoors, talking while moving. Nick joins Jonathan and Ava. Real conversation on the trail, early morning, great energy.</div><div class="etgs"><span class="etg etfr">Free</span><span class="etg etou">Outdoor</span></div></div></div>
+<div class="ec"><div class="es b"></div><div class="ei"><div class="etop"><div class="en">Wed Jun 17 AM — Lachine Rapids (Nick's call)</div><span class="edt">9 AM</span></div><div class="ed">Nick chooses: raft with Jonathan + Ava + Dad (soaked, white-knuckling, laughing together) OR stay with Danielle for kayaking. A genuine brothers decision — coordinate with Danielle the night before.</div><div class="etgs"><span class="etg etbk">clubraft.com if rafting</span></div></div></div>
+<div class="ec"><div class="es b"></div><div class="ei"><div class="etop"><div class="en">🌟 Fri Jun 19 PM — Dedicated brothers afternoon</div><span class="edt">1–4 PM</span></div><div class="ed">While Danielle + Lynda spa. Best dedicated brothers window of the trip. Nick picks: BATL Axe Throwing downtown (1.5 hrs, genuinely fun), a proper whisky bar (Atwater Cocktail Club — great spirits program), or a long lunch just them two somewhere worth going.</div><div class="etgs"><span class="etg etal">Nick picks the activity</span></div></div></div>
+</div></div>
+</div><!-- /tab-sched -->
+
+<!-- ===== EVENTS TAB ===== -->
+<div class="panel" id="tab-events">
+<div class="note nr" style="margin-top:20px"><strong>⚠️ Book immediately:</strong> Cirque du Soleil ECHO sells out weeks in advance. Book before anything else.</div>
+<div class="sh"><div class="shl"></div><h2>🌟 Active Events During Your Week (Jun 13–20)</h2><div class="shl"></div></div>
+<div class="egrid">
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">🎵 Les Francos de Montréal</div><span class="edt">Jun 12–20 · ALL WEEK</span></div><div class="ed">World's largest French-language music festival — 150+ performances over 9 days. FREE outdoor mega-stage at Place des Festivals every night from ~8 PM. Ticketed indoor shows at MTELUS, Le Studio TD, and Place des Arts. 2026 lineup: Cœur de Pirate (Jun 19), Pierre Lapointe (Jun 18), Lorie (Jun 17), Laurent Voulzy, Orelsan, Lou-Adriane Cassidy, Émile Bilodeau and more. Street performers, food vendors, thousands of Montrealers every evening. The free outdoor stage is the main recommendation for the whole family — go every night.</div><div class="etgs"><span class="etg etfr">Free outdoor stage nightly</span><span class="etg ettk">Ticketed indoor shows</span><span class="etg etal">All ages</span></div></div></div>
+<div class="ec"><div class="es"></div><div class="ei"><div class="etop"><div class="en">🎪 Cirque du Soleil ECHO — Old Port Big Top</div><span class="edt">May 23 – Jun 28 · BOOK NOW</span></div><div class="ed">Cirque du Soleil was founded in Montreal in 1984. ECHO returns to the iconic Big Top at the Old Port through June 28. Full ~2.5-hour show: aerialists, acrobats, live original music, stunning staging. Pregnancy-safe (fully seated). Perfect for all ages. Book NOW at cirquedusoleil.com. Summer weeknights sell out weeks ahead. Planned for Tuesday June 16 in the itinerary.</div><div class="etgs"><span class="etg ettk">Ticketed — BOOK NOW</span><span class="etg etal">All ages</span><span class="etg etal">Pregnancy safe</span></div></div></div>
+<div class="ec"><div class="es p"></div><div class="ei"><div class="etop"><div class="en">🎨 MURAL Festival — Freshly Painted Murals</div><span class="edt">Murals permanent · Festival ended Jun 14</span></div><div class="ed">The MURAL Festival (Jun 4–14) has just finished painting enormous murals along Boulevard Saint-Laurent — you arrive the day before the festival ends, so everything is at peak freshness. Free self-guided walk from Sherbrooke to Mont-Royal Ave. TourBird free audio guide available. Guided tours from Spade & Palacio (~$20). 100+ murals. Flat terrain throughout — perfect for Danielle and Lynda.</div><div class="etgs"><span class="etg etfr">Free</span><span class="etg etou">Outdoor</span><span class="etg etal">All ages · flat terrain</span></div></div></div>
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">🥁 Tam-Tams Drum Circle — Base of Mont Royal</div><span class="edt">Every Sunday · Jun 14 + Jun 21</span></div><div class="ed">Every Sunday in summer, a massive spontaneous drum circle erupts at the George-Étienne Cartier Monument — hundreds of drummers, dancers, fire jugglers, and Montrealers of every description. Zero admission, zero agenda. Starts ~11 AM on sunny Sundays. Combine with the Mont Royal hike on Sunday June 14 — it's right at the base of the mountain trail.</div><div class="etgs"><span class="etg etfr">Totally free</span><span class="etg etou">Outdoor · Sunday only</span></div></div></div>
+<div class="ec"><div class="es b"></div><div class="ei"><div class="etop"><div class="en">🎭 Montreal Fringe Festival</div><span class="edt">Jun 11–21 · Overlaps your trip</span></div><div class="ed">Independent theatre with free outdoor programming at Fringe Park (corner Rachel + Saint-Laurent, steps from the Plateau). Live bands, street performers, shows in English and French. Easy to pop into on any Plateau afternoon. The Drag Race marquee event happens June 20 — your departure day, so probably missed, but the outdoor park programming is free all week.</div><div class="etgs"><span class="etg etfr">Free outdoor</span><span class="etg ettk">Some ticketed shows</span></div></div></div>
+<div class="ec"><div class="es gr"></div><div class="ei"><div class="etop"><div class="en">🎷 Piknic Électronik — Parc Jean-Drapeau</div><span class="edt">Sun Jun 14 · 2 PM–dusk</span></div><div class="ed">Weekly outdoor electronic music event on the St. Lawrence island (metro Jean-Drapeau). June 14 edition features Steve Aoki. Family-friendly atmosphere, beautiful park setting, world-class DJs. Optional addition to the Sunday waterfront day if anyone wants to go after the Ferris wheel.</div><div class="etgs"><span class="etg ettk">Ticketed</span><span class="etg etou">Outdoor island venue</span></div></div></div>
+<div class="ec"><div class="es b"></div><div class="ei"><div class="etop"><div class="en">🎵 Montreal Chamber Music Festival</div><span class="edt">Jun 9–21 · Your entire trip</span></div><div class="ed">Critically-acclaimed classical music festival running your entire stay. Free and ticketed concerts at intimate venues. Good option for Lynda on an evening when she wants a quieter cultural experience. Check festivalmontreal.org for schedule.</div><div class="etgs"><span class="etg etfr">Some free</span><span class="etg ettk">Some ticketed</span></div></div></div>
+<div class="ec"><div class="es b"></div><div class="ei"><div class="etop"><div class="en">🏛️ SAT Satosphere — Immersive Dome Shows</div><span class="edt">Through Jun 25 · Book ahead</span></div><div class="ed">360° audiovisual dome at the SAT in the Plateau — projections wrap the entire dome with spatial audio. Summer program through June 25 covers your whole trip. Ava's interactive art request. Nothing like this exists in the US. Book at sat.qc.ca.</div><div class="etgs"><span class="etg ettk">Ticketed</span><span class="etg etbk">Book ahead</span><span class="etg etal">Teens + adults</span></div></div></div>
+</div>
+<div class="sh"><div class="shl"></div><h2>📅 Francos Night-by-Night</h2><div class="shl"></div></div>
+<div class="egrid">
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Sat Jun 13 — Opening Weekend Night 1</div><span class="edt">8 PM · Free outdoor</span></div><div class="ed">Your first night in Montreal. Opening weekend energy — biggest crowd of the festival. Free outdoor stage at Place des Festivals. Perfect city introduction.</div><div class="etgs"><span class="etg etfr">Free</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Sun Jun 14 — Night 2 (+ Tam-Tams afternoon)</div><span class="edt">8 PM · Free outdoor</span></div><div class="ed">Sunday night Francos following the active waterfront day. Combine with the daytime Tam-Tam drum circle at Mont Royal for a full Sunday of Montreal culture.</div><div class="etgs"><span class="etg etfr">Free</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Mon Jun 15 — Night 3</div><span class="edt">8 PM · Free outdoor</span></div><div class="ed">Plateau day ends at Francos. La Banquise late poutine option after the show — classic gravy corn-starch based, check GF with Danielle.</div><div class="etgs"><span class="etg etfr">Free</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Tue Jun 16 — Night 4 (Cirque evening)</div><span class="edt">8 PM · Free outdoor (after Cirque)</span></div><div class="ed">Cirque du Soleil is the main event. If Cirque ends before midnight, Place des Festivals is an easy stop on the walk back to the hotel.</div><div class="etgs"><span class="etg etfr">Free</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Wed Jun 17 — Night 5</div><span class="edt">8 PM · Free outdoor</span></div><div class="ed">After the big active rafting/kayaking day. Wednesday evening crowd is relaxed. Good wind-down after a physical day.</div><div class="etgs"><span class="etg etfr">Free</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">Thu Jun 18 — Pierre Lapointe night</div><span class="edt">Ticketed at Place des Arts</span></div><div class="ed">One of Québec's most celebrated singer-songwriters performing tonight. Ticketed indoor show at Place des Arts for those who want it. Free outdoor stage running simultaneously for the whole family.</div><div class="etgs"><span class="etg ettk">Ticketed indoor available</span><span class="etg etfr">Free outdoor also</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">🌟 Fri Jun 19 — CŒUR DE PIRATE (THE NIGHT)</div><span class="edt">~9 PM · FREE outdoor stage</span></div><div class="ed">The biggest night of the Francos for your group. Béatrice Martin (Cœur de Pirate) is Canada's most beloved francophone pop artist — emotionally powerful, beautiful, connects across generations. FREE outdoor stage at Place des Festivals. The emotional peak of the whole trip. DO NOT MISS. Bring a portable chair for Danielle.</div><div class="etgs"><span class="etg etfr">FREE</span><span class="etg etal">⭐ Do not miss</span></div></div></div>
+</div>
+</div><!-- /tab-events -->
+
+<!-- ===== RESTAURANTS TAB ===== -->
+<div class="panel" id="tab-food">
+<div class="stabs" style="margin-top:20px">
+<button class="stab active" onclick="showSub('food','qc',this)">🥗 Québécois/French</button>
+<button class="stab" onclick="showSub('food','gf',this)">🌾 Gluten-Free</button>
+<button class="stab" onclick="showSub('food','breakfast',this)">☀️ Breakfast</button>
+<button class="stab" onclick="showSub('food','lunch',this)">🥙 Lunch/Casual</button>
+<button class="stab" onclick="showSub('food','dinner',this)">🌙 Dinner/Fine</button>
+<button class="stab" onclick="showSub('food','poutine',this)">🍟 Poutine</button>
+<button class="stab" onclick="showSub('food','markets',this)">🏪 Markets</button>
+<button class="stab" onclick="showSub('food','intl',this)">🌍 International</button>
+</div>
+<div class="note nr"><strong>Danielle dietary flags for ALL restaurants:</strong> Gluten-free · No raw fish (no sushi/tartare) · No processed/deli meats · Hot smoked meats OK (smoked brisket, rotisserie) · Needs 3 meals per day · Always tell servers upfront.</div>
+
+<div class="sp active" id="food-qc">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🥘</div><div><div class="vn">Boris Bistro</div><div class="vsb">Old Montreal · French bistro · GF certified</div></div></div><div class="vd">Quebec's first certified GF restaurant (Canadian Celiac Association). Full classic French menu — duck fat fries, braised rabbit, grilled trout, steak tartare with GF bread. Beautiful patio. Danielle can order anything here with confidence. Date-night atmosphere for Nick + Danielle.</div><div class="vtgs"><span class="vtg vgf">100% GF certified</span><span class="vtg vpa">Patio</span><span class="vtg vdi">Dinner</span><span class="vtg vbk">Reserve</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🌟</div><div><div class="vn">Toqué!</div><div class="vsb">Downtown · Canada-level fine dining</div></div></div><div class="vd">Chef Normand Laprise's flagship — one of Canada's best restaurants. Seven-course tasting menu largely naturally GF (product-driven, sauce reductions not flour-thickened). Jonathan's splurge group dinner. Book 2–3 weeks ahead.</div><div class="vtgs"><span class="vtg vgf">Largely GF</span><span class="vtg vpx">~$152/pp prix-fixe</span><span class="vtg vdi">Dinner</span><span class="vtg vbk">Book now</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🍺</div><div><div class="vn">L'Express</div><div class="vsb">Plateau · Brasserie institution since 1980</div></div></div><div class="vd">The most atmospheric brasserie in Montreal — zinc bar, checkered tiles, banquette seating, noise and energy. Steak frites, duck confit. Lynda will love this room. Staff GF-knowledgeable. Book ahead.</div><div class="vtgs"><span class="vtg vdi">Dinner</span><span class="vtg vlu">Lunch</span><span class="vtg vbk">Reserve</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🦀</div><div><div class="vn">Garde Manger</div><div class="vsb">Old Montreal · Chuck Hughes' bistro</div></div></div><div class="vd">Lively Old Montreal restaurant in a beautiful stone-walled room. Quebec seafood, great cocktails, convivial energy. Danielle + Lynda's "great atmosphere" request. Confirm GF items — seafood dishes often naturally GF.</div><div class="vtgs"><span class="vtg vdi">Dinner</span><span class="vtg vbk">Reserve required</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🥗</div><div><div class="vn">Monarque</div><div class="vsb">Old Montreal · French brasserie · GF-aware</div></div></div><div class="vd">Beautiful brasserie in Old Montreal, highly rated for GF awareness. Staff knowledgeable about celiac. Patio available. Good all-rounder for the whole family including Danielle. Modern French menu.</div><div class="vtgs"><span class="vtg vgf">GF-aware staff</span><span class="vtg vpa">Patio</span><span class="vtg vdi">Dinner</span><span class="vtg vlu">Lunch</span></div></div>
+</div></div>
+
+<div class="sp" id="food-gf">
+<div class="note nb"><strong>Best confirmed GF restaurants for Danielle:</strong></div>
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f4fd">🌾</div><div><div class="vn">Boris Bistro</div><div class="vsb">Old Montreal · Fully certified GF</div></div></div><div class="vd">Quebec's only certified GF restaurant. Zero cross-contamination protocol. Full menu available. Danielle orders anything with complete confidence. Beautiful Old Montreal patio.</div><div class="vtgs"><span class="vtg vgf">Certified GF</span><span class="vtg vpa">Patio</span><span class="vtg vdi">Dinner</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f4fd">🫔</div><div><div class="vn">Arepera du Plateau</div><div class="vsb">Plateau · Venezuelan · 100% GF facility</div></div></div><div class="vd">100% GF corn arepas. Entirely safe for celiac — no wheat anywhere in the building. Chicken, beef, cheese fillings, fried plantains. Casual, affordable, delicious. Best for lunch during Plateau shopping day.</div><div class="vtgs"><span class="vtg vgf">100% GF facility</span><span class="vtg vlu">Lunch</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f4fd">🥞</div><div><div class="vn">La Crêperie du Marché</div><div class="vsb">Jean-Talon Market · GF buckwheat crêpes</div></div></div><div class="vd">Fully GF crêpe kiosk inside Jean-Talon Market. Organic buckwheat, chickpea, rice flour. GF ham, plant-based milk options. The best GF breakfast experience in the city. Combine with a market wander on June 19.</div><div class="vtgs"><span class="vtg vgf">Fully GF</span><span class="vtg vbf">Breakfast</span><span class="vtg vlu">Lunch</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f4fd">🍟</div><div><div class="vn">Modavie</div><div class="vsb">Old Montreal · GF poutine</div></div></div><div class="vd">GF poutine with dedicated fryer and corn-starch gravy. Staff trained on celiac. Located in Old Montreal for the first days. Danielle can have actual poutine safely here.</div><div class="vtgs"><span class="vtg vgf">GF poutine · dedicated fryer</span><span class="vtg vlu">Lunch</span><span class="vtg vdi">Dinner</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f4fd">🍜</div><div><div class="vn">Umami Ramen</div><div class="vsb">Plateau · GF ramen options</div></div></div><div class="vd">Montreal's only ramen shop with GF noodles. Miso and spicy miso with GF noodles, homemade tofu, tomato confit. Warm, filling, good for a rainy day on the Plateau. Confirm broth ingredients.</div><div class="vtgs"><span class="vtg vgf">GF noodles available</span><span class="vtg vlu">Lunch</span><span class="vtg vdi">Dinner</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f4fd">🍗</div><div><div class="vn">La Rôtisserie la Lune</div><div class="vsb">Mile-Ex · Québécois rotisserie · opened 2024</div></div></div><div class="vd">New project from the owners of acclaimed Mon Lapin. Traditional Quebec rotisserie with wide GF options. Hot smoked and rotisserie meats — Danielle can eat these. Creative, high-quality. Worth the trip.</div><div class="vtgs"><span class="vtg vgf">Wide GF menu</span><span class="vtg vdi">Dinner</span></div></div>
+</div></div>
+
+<div class="sp" id="food-breakfast">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fff8e8">🥯</div><div><div class="vn">Fairmount Bagel</div><div class="vsb">Mile End · Open 24h · since 1919</div></div></div><div class="vd">Wood-fired, hand-rolled, open 24 hours. The Montreal bagel is thinner, denser, and slightly sweet — totally different from anything at home. A bucket-list food moment. Note: contains gluten — Danielle skips or finds GF alternative nearby.</div><div class="vtgs"><span class="vtg vbf">Breakfast</span><span class="vtg vpx">Cash OK</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fff8e8">🍳</div><div><div class="vn">Beauty's Luncheonette</div><div class="vsb">Plateau · Classic Jewish diner since 1942</div></div></div><div class="vd">Montreal institution. Famous weekend lines. Classic Jewish-Montreal breakfast: lox, bagels, eggs, smoked meat. Arrive early on weekends. Danielle: confirm GF options with server.</div><div class="vtgs"><span class="vtg vbf">Breakfast</span><span class="vtg vlu">Brunch</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fff8e8">☕</div><div><div class="vn">Café Olimpico</div><div class="vsb">Mile End · Best espresso in Montreal since 1970</div></div></div><div class="vd">Legendary Italian café on Saint-Viateur. Standing room or small tables, no WiFi, no laptops. Pure coffee culture. The coffee Lynda dreams about on a Plateau morning.</div><div class="vtgs"><span class="vtg vbf">Coffee/breakfast</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fff8e8">🥞</div><div><div class="vn">La Crêperie du Marché (Jean-Talon)</div><div class="vsb">Little Italy · Fully GF buckwheat crêpes</div></div></div><div class="vd">Best GF breakfast in the city. Organic buckwheat, chickpea, rice flour crêpes — sweet and savory. Inside Jean-Talon Market on Friday June 19. Danielle's safest morning food option.</div><div class="vtgs"><span class="vtg vbf">Breakfast</span><span class="vtg vgf">Fully GF</span></div></div>
+</div></div>
+
+<div class="sp" id="food-lunch">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f8e8">🥩</div><div><div class="vn">Schwartz's Deli</div><div class="vsb">Plateau · Famous smoked meat since 1928</div></div></div><div class="vd">The most famous deli in Montreal. The smoked meat sandwich is a city icon. Note for Danielle: Schwartz's smoked meat is hot-smoked whole brisket — NOT a processed deli meat. She can likely have this — confirm with her comfort level.</div><div class="vtgs"><span class="vtg vlu">Lunch</span><span class="vtg vpx">Walk-in only</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f8e8">🫔</div><div><div class="vn">Arepera du Plateau</div><div class="vsb">Plateau · 100% GF Venezuelan</div></div></div><div class="vd">100% GF corn arepas with a massive filling menu. Quick, casual, affordable, completely safe for Danielle. Perfect lunch during Plateau shopping day.</div><div class="vtgs"><span class="vtg vlu">Lunch</span><span class="vtg vgf">100% GF</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f8e8">🧺</div><div><div class="vn">Marché Atwater — Picnic Supplies</div><div class="vsb">Saint-Henri · Canal-side market</div></div></div><div class="vd">Beautiful canal-side market for the Wednesday rafting/kayaking picnic. Cheese, GF artisan breads, charcuterie (Danielle: hot smoked OK), seasonal fruit, pastries. Eat canal-side.</div><div class="vtgs"><span class="vtg vlu">Picnic lunch</span><span class="vtg vgf">GF options</span><span class="vtg vpa">Canal seating</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f8e8">🥗</div><div><div class="vn">Mandy's Salads</div><div class="vsb">Multiple locations · GF-aware</div></div></div><div class="vd">Popular Montreal salad chain, highly GF-aware — staff will prep separately for celiac. Creative salads, wide menu. Good quick lunch that works for everyone. Multiple locations citywide.</div><div class="vtgs"><span class="vtg vlu">Lunch</span><span class="vtg vgf">GF-aware staff</span></div></div>
+</div></div>
+
+<div class="sp" id="food-dinner">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#f3e8ff">🌟</div><div><div class="vn">Toqué!</div><div class="vsb">Downtown · The splurge dinner</div></div></div><div class="vd">Jonathan's requested high-end group dinner. Chef Normand Laprise's iconic restaurant — product-driven Quebec cuisine. Seven-course tasting menu largely GF. Book 2–3 weeks ahead at toque.ca.</div><div class="vtgs"><span class="vtg vdi">Dinner</span><span class="vtg vpx">~$152/pp</span><span class="vtg vgf">Largely GF</span><span class="vtg vbk">Book now</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#f3e8ff">🦀</div><div><div class="vn">Garde Manger</div><div class="vsb">Old Montreal · Celebrity bistro</div></div></div><div class="vd">Chuck Hughes' celebrated restaurant. Lively, great seafood, beautiful stone-walled room. The atmosphere Danielle + Lynda both asked for. Confirm GF items. Reserve ahead.</div><div class="vtgs"><span class="vtg vdi">Dinner</span><span class="vtg vbk">Reserve required</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#f3e8ff">🥩</div><div><div class="vn">L'Express</div><div class="vsb">Plateau · Classic brasserie institution</div></div></div><div class="vd">Open since 1980. The most atmospheric brasserie in Montreal. Zinc bar, banquettes, noise and energy. Steak frites, duck confit, côte de boeuf. Lynda will love this. Book ahead.</div><div class="vtgs"><span class="vtg vdi">Dinner</span><span class="vtg vbk">Reserve</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#f3e8ff">🍋</div><div><div class="vn">Restaurant Bonaparte</div><div class="vsb">Old Montreal · Romantic French</div></div></div><div class="vd">Elegant classic French restaurant in Old Montreal's historic core. Beautiful stone dining room. Perfect for Nick + Danielle's couple dinner or a group splurge. GF dishes available — confirm with server.</div><div class="vtgs"><span class="vtg vdi">Dinner</span><span class="vtg vbk">Reserve</span><span class="vtg vgf">GF dishes available</span></div></div>
+</div></div>
+
+<div class="sp" id="food-poutine">
+<div class="note nt"><strong>Poutine note:</strong> Traditional poutine gravy is often thickened with wheat flour — NOT GF. Danielle should only eat poutine at the specifically confirmed GF venues below.</div>
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#f0faf8">🍟</div><div><div class="vn">La Banquise</div><div class="vsb">Plateau · 30+ varieties · Open 24h</div></div></div><div class="vd">Montreal's most famous poutine restaurant. Classic gravy is corn-starch based and GF — confirm with server each time. Great late-night option after Francos concerts. Casual, very local, always busy.</div><div class="vtgs"><span class="vtg vgf">Classic gravy GF — confirm</span><span class="vtg vlu">Lunch</span><span class="vtg vdi">Dinner/late night</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#f0faf8">🍟</div><div><div class="vn">Modavie</div><div class="vsb">Old Montreal · GF dedicated fryer</div></div></div><div class="vd">GF poutine with dedicated fryer — fries NOT contaminated from other gluten items. GF corn-starch gravy. Staff trained on celiac. Danielle's safest poutine option in Old Montreal.</div><div class="vtgs"><span class="vtg vgf">Dedicated fryer</span><span class="vtg vlu">Lunch</span><span class="vtg vdi">Dinner</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#f0faf8">🍟</div><div><div class="vn">Poutineville</div><div class="vsb">Multiple locations · Build-your-own</div></div></div><div class="vd">Build-your-own poutine concept. GF base clearly marked. Multiple locations. Casual, fun for a group, Danielle safe here.</div><div class="vtgs"><span class="vtg vgf">GF base available</span><span class="vtg vlu">Lunch</span><span class="vtg vdi">Dinner</span></div></div>
+</div></div>
+
+<div class="sp" id="food-markets">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdf3e0">🏪</div><div><div class="vn">Marché Jean-Talon</div><div class="vsb">Little Italy · North America's best outdoor market</div></div></div><div class="vd">300+ vendors: local produce, Quebec cheeses, freshly baked bread, meat, seafood, flowers. Multiple GF vendors including fully GF La Crêperie du Marché. Best Friday June 19 morning for the whole group before the brothers/spa split.</div><div class="vtgs"><span class="vtg vbf">Breakfast</span><span class="vtg vlu">Lunch</span><span class="vtg vgf">Multiple GF options</span><span class="vtg vpa">Outdoor</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdf3e0">🛶</div><div><div class="vn">Marché Atwater</div><div class="vsb">Saint-Henri · Canal-side</div></div></div><div class="vd">Beautiful market along the Lachine Canal. Cheese, charcuterie, produce, specialty items. Perfect for the Wednesday canal picnic. Canal-side seating. GF artisan breads available.</div><div class="vtgs"><span class="vtg vlu">Picnic/lunch</span><span class="vtg vgf">GF artisan items</span><span class="vtg vpa">Canal seating</span></div></div>
+</div></div>
+
+<div class="sp" id="food-intl">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8e8fe">🍜</div><div><div class="vn">Chinatown (general area)</div><div class="vsb">Downtown · Multiple venues</div></div></div><div class="vd">Casual, affordable lunches. Vietnamese pho and rice dishes naturally GF. Good for Tuesday midday between morning sub-groups and Cirque prep. Danielle: stick to pho (confirm no soy sauce broth) or rice dishes.</div><div class="vtgs"><span class="vtg vlu">Lunch</span><span class="vtg vgf">Pho/rice GF — confirm</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8e8fe">🌶️</div><div><div class="vn">Krapow / Satu Lagi</div><div class="vsb">Plateau · Balinese/Asian · opened 2024</div></div></div><div class="vd">New Balinese street food concept on the Plateau. Already a neighborhood favourite, GF-friendly, clearly marked menu. Good for a casual Plateau dinner during the shopping day.</div><div class="vtgs"><span class="vtg vdi">Dinner</span><span class="vtg vlu">Lunch</span><span class="vtg vgf">GF options</span></div></div>
+</div></div>
+</div><!-- /tab-food -->
+
+<!-- ===== MUSEUMS TAB ===== -->
+<div class="panel" id="tab-museums">
+<div class="stabs" style="margin-top:20px">
+<button class="stab active" onclick="showSub('museums','history',this)">🏛️ History</button>
+<button class="stab" onclick="showSub('museums','art',this)">🎨 Art</button>
+<button class="stab" onclick="showSub('museums','science',this)">🔬 Science/Nature</button>
+<button class="stab" onclick="showSub('museums','immersive',this)">🌀 Immersive</button>
+</div>
+<div class="sp active" id="museums-history">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdefd8">🏛️</div><div><div class="vn">Pointe-à-Callière Museum</div><div class="vsb">Old Montreal · Built over 1642 founding site</div></div></div><div class="vd">Montreal's archaeology and history museum built directly over the city's original 1642 settlement. Glass floors above the original structures. Excellent Indigenous + French-Canadian history. Beautiful building with Old Port views. Best for Lynda. Accessible.</div><div class="vtgs"><span class="vtg vbf">Morning</span><span class="vtg vlu">Afternoon</span><span class="vtg vbk">Admission fee</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdefd8">⛪</div><div><div class="vn">Notre-Dame Basilica</div><div class="vsb">Old Montreal · Gothic revival masterpiece</div></div></div><div class="vd">One of the most beautiful interiors in North America — blue vaulted ceiling with gold stars, stunning stained glass. Celine Dion was married here. The AURA light show runs evenings (60-min immersive projection on the interior walls). Even Ava who dislikes history will be amazed.</div><div class="vtgs"><span class="vtg vbf">Day visit</span><span class="vtg vdi">AURA show evenings</span><span class="vtg vbk">Admission · AURA ticketed separately</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdefd8">🔭</div><div><div class="vn">Montreal Science Centre + IMAX</div><div class="vsb">Old Port · Interactive + IMAX dome</div></div></div><div class="vd">Hands-on science exhibits and a full IMAX dome in the Old Port waterfront. Good for Ava — interactive, not stuffy. Perfect rainy-day option. Accessible.</div><div class="vtgs"><span class="vtg vlu">Any time</span><span class="vtg vbk">Admission</span></div></div>
+</div></div>
+<div class="sp" id="museums-art">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🖼️</div><div><div class="vn">Musée des Beaux-Arts (MMFA)</div><div class="vsb">Downtown · World-class fine art</div></div></div><div class="vd">One of the best art museums in Canada — five pavilions, ancient to contemporary. Free admission for under-30 on permanent collection. Sculpture garden, café. Good for Lynda at her own pace. Accessible.</div><div class="vtgs"><span class="vtg vlu">Morning/afternoon</span><span class="vtg vbk">Admission · free under-30</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🖌️</div><div><div class="vn">MAC (Musée d'art contemporain)</div><div class="vsb">Quartier des Spectacles · Contemporary</div></div></div><div class="vd">Modern and contemporary art right beside Place des Festivals — convenient after Francos planning. Free for under-18 (Ava). Family workshops on weekends.</div><div class="vtgs"><span class="vtg vlu">Afternoon</span><span class="vtg vbk">Free under-18</span></div></div>
+</div></div>
+<div class="sp" id="museums-science">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f4ef">🦋</div><div><div class="vn">Montreal Biodôme</div><div class="vsb">Olympic Park · 5 ecosystems under one roof</div></div></div><div class="vd">Five complete ecosystems: tropical rainforest, sub-polar (penguins!), St. Lawrence marine, Laurentian forest. Otters, capybaras, tropical birds, beavers. Climate-controlled, accessible. Best combined with Olympic Park Tower — both are right there.</div><div class="vtgs"><span class="vtg vlu">Morning</span><span class="vtg vbk">Admission</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f4ef">🌿</div><div><div class="vn">Montreal Botanical Garden</div><div class="vsb">Olympic Park area · 185 acres</div></div></div><div class="vd">One of the world's largest botanical gardens — 10,000+ species, 10 greenhouse pavilions. June is peak bloom for the Japanese and Chinese gardens (spectacular). Fully flat + accessible throughout. Nick + Danielle's Tuesday morning.</div><div class="vtgs"><span class="vtg vpr">Pregnancy ideal</span><span class="vtg vpa">Flat outdoor</span><span class="vtg vbk">Admission</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f4ef">🌍</div><div><div class="vn">Biosphère</div><div class="vsb">Île Sainte-Hélène · Buckminster Fuller dome</div></div></div><div class="vd">Fuller's iconic geodesic dome from Expo 67, now an eco-museum on interactive environmental themes. The building itself is one of the most photographed in Montreal — worth seeing even from outside. Metro Jean-Drapeau.</div><div class="vtgs"><span class="vtg vlu">Afternoon</span><span class="vtg vbk">Admission</span></div></div>
+</div></div>
+<div class="sp" id="museums-immersive">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#ede0ff">🌀</div><div><div class="vn">SAT Satosphere</div><div class="vsb">Plateau · 360° dome · Through Jun 25</div></div></div><div class="vd">Full 360° audiovisual dome — projections cover the entire curved surface with spatial audio. Summer program through June 25 covers your whole trip. Ava's hands-on/interactive art request. Uniquely Montreal — nothing like this exists in the US. Book at sat.qc.ca.</div><div class="vtgs"><span class="vtg vbk">Book ahead at sat.qc.ca</span><span class="vtg vpr">Seated — pregnancy OK</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#ede0ff">💡</div><div><div class="vn">Notre-Dame Basilica — AURA Show</div><div class="vsb">Old Montreal · Evening projection</div></div></div><div class="vd">60-min immersive light and sound show projected onto the interior of the basilica. Runs several evenings per week. Transformative experience. Book ahead. All ages, seated.</div><div class="vtgs"><span class="vtg vdi">Evenings</span><span class="vtg vbk">Book ahead</span></div></div>
+</div></div>
 </div>
 
-<!-- COMPLETE -->
-<div id="complete">
-  <div class="complete-inner">
-    <span class="big-emoji">🎉</span>
-    <h2>Thanks, <span id="completeName">friend</span>!</h2>
-    <p>Your answers are saved to Jonathan's Google Sheet. He'll use them to build the perfect Montreal itinerary for everyone!</p>
-    <p style="margin-bottom:24px;font-size:.8rem;color:rgba(255,255,255,.3)">Pass this link to the next person who needs to fill it out.</p>
-    <div class="complete-btns">
-      <button class="btn-home" onclick="goHome()">↩ Back to start</button>
-    </div>
-  </div>
+<!-- ===== OUTDOOR TAB ===== -->
+<div class="panel" id="tab-outdoor">
+<div class="stabs" style="margin-top:20px">
+<button class="stab active" onclick="showSub('outdoor','parks',this)">🌿 Parks</button>
+<button class="stab" onclick="showSub('outdoor','water',this)">💧 Water</button>
+<button class="stab" onclick="showSub('outdoor','biking',this)">🚲 Biking</button>
+<button class="stab" onclick="showSub('outdoor','hoods',this)">🏘️ Neighbourhoods</button>
+</div>
+<div class="sp active" id="outdoor-parks">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f0e8">🏔️</div><div><div class="vn">Parc du Mont-Royal</div><div class="vsb">City center · Olmsted-designed</div></div></div><div class="vd">Montreal's mountain — designed by Frederick Law Olmsted (same as Central Park). Trails to the Belvédère Kondiaronk summit lookout. Tam-Tam drum circle at the Cartier Monument Sundays. Note: moderate hill incline — Danielle and Lynda can drive to a parking area near the lookout instead of hiking from the base.</div><div class="vtgs"><span class="vtg vpa">Outdoor</span><span class="vtg vbf">Morning recommended</span><span class="vtg vpr">Drive to lookout for Danielle/Lynda</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f0e8">🌳</div><div><div class="vn">Parc La Fontaine</div><div class="vsb">Plateau · Beautiful urban park · Completely flat</div></div></div><div class="vd">Montreal's most loved neighbourhood park. Lake with paddle boats, winding paths, outdoor theatre, summer food vendors. Completely flat. Adjacent to Plateau shopping streets. Perfect for the Monday afternoon rest after shopping. Danielle + Lynda ideal.</div><div class="vtgs"><span class="vtg vpa">Flat outdoor</span><span class="vtg vpr">Pregnancy ideal</span><span class="vtg vpx">Free</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f0e8">🏝️</div><div><div class="vn">Parc Jean-Drapeau (Île Sainte-Hélène)</div><div class="vsb">St. Lawrence island · Metro accessible</div></div></div><div class="vd">Island in the St. Lawrence — Biosphère, public beach (Plage Jean-Doré), Piknic Électronik venue. Beautiful waterfront views of downtown. Metro Yellow Line. Flat terrain throughout.</div><div class="vtgs"><span class="vtg vpa">Outdoor island</span><span class="vtg vpx">Free to enter</span></div></div>
+</div></div>
+<div class="sp" id="outdoor-water">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e3f0fb">🌊</div><div><div class="vn">Lachine Rapids — Club Raft MTL</div><div class="vsb">Saint-Henri · Class 2–3 whitewater</div></div></div><div class="vd">Whitewater rafting on the St. Lawrence River rapids inside the city. Montreal skyline visible throughout — one of the most surreal urban adventures in North America. Jonathan, Ava, Nick (optional), and Dad. ~2 hours. Book at clubraft.com. NOT for Danielle.</div><div class="vtgs"><span class="vtg vbk">clubraft.com</span><span class="vtg vpr">NOT for Danielle</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e3f0fb">🛶</div><div><div class="vn">KSF Outdoor — Lachine Canal Kayaking</div><div class="vsb">Saint-Henri · Flatwater kayak + SUP</div></div></div><div class="vd">Danielle's specifically requested activity. Flatwater kayaking on the Lachine Canal — calm, safe at 6 months pregnant. Beautiful canal scenery. Also stand-up paddleboard and guided tours. Mention pregnancy when booking.</div><div class="vtgs"><span class="vtg vbk">ksfoutdoor.com</span><span class="vtg vpr">Pregnancy safe</span></div></div>
+</div></div>
+<div class="sp" id="outdoor-biking">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8fae8">🚲</div><div><div class="vn">Bixi Bike Share</div><div class="vsb">Citywide · 611 stations · 7,000+ bikes</div></div></div><div class="vd">Montreal's bike-share system. Minimum age 14 (Ava qualifies). E-bikes also available. Day and week passes available. Best routes: Lachine Canal path (flat, beautiful), Old Port boardwalk (flat), Mont Royal loop (hilly — not for Danielle). Danielle can use an e-bike on the flat canal path.</div><div class="vtgs"><span class="vtg vpr">E-bike OK for Danielle on flat paths</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8fae8">🛣️</div><div><div class="vn">Lachine Canal Bike Path</div><div class="vsb">11 km · Completely flat · Stunning scenery</div></div></div><div class="vd">The best bike ride in Montreal — 11 km completely flat along the historic canal. Passes Atwater Market, historic warehouses, beautiful bridges. Perfect for everyone including Danielle (e-bike). One of North America's great urban bike paths.</div><div class="vtgs"><span class="vtg vpa">Completely flat</span><span class="vtg vpr">E-bike OK</span><span class="vtg vpx">Free path</span></div></div>
+</div></div>
+<div class="sp" id="outdoor-hoods">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdf3e0">🏰</div><div><div class="vn">Vieux-Montréal (Old Montreal)</div><div class="vsb">Historic core · 17th–19th century buildings</div></div></div><div class="vd">The original 1642 city. Cobblestone streets, stone buildings, Place Jacques-Cartier, the Old Port waterfront. Best in the morning before crowds. Note: cobblestones can be uneven — wear good shoes. Lynda's #1 area.</div><div class="vtgs"><span class="vtg vpx">Mostly flat · uneven cobblestones</span><span class="vtg vpx">Free to walk</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdf3e0">🎨</div><div><div class="vn">Le Plateau-Mont-Royal</div><div class="vsb">Northeast · Best neighbourhood in the city</div></div></div><div class="vd">Victorian triplex houses, exterior staircases, incredible café and restaurant scene, best boutique shopping. Mont-Royal Ave and Saint-Denis are the main streets. Mostly flat. Parc La Fontaine at the east end. Danielle's boutique heaven, Lynda's café paradise, Ava's shopping ground.</div><div class="vtgs"><span class="vtg vpa">Mostly flat</span><span class="vtg vpx">Free to explore</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdf3e0">🌹</div><div><div class="vn">Mile End</div><div class="vsb">Northwest of Plateau · Artsy + multicultural</div></div></div><div class="vd">Where Arcade Fire started, where Leonard Cohen lived. Bernard Ave for cafés + restaurants. Saint-Viateur Bagel is here. MURAL murals extend into this area. Less touristy than the main Plateau. Flat terrain.</div><div class="vtgs"><span class="vtg vpa">Flat</span><span class="vtg vpx">Free to explore</span></div></div>
+</div></div>
 </div>
 
-<!-- ERROR -->
-<div id="error-screen">
-  <div class="error-inner">
-    <span class="e-icon">⚠️</span>
-    <h2>Submission failed</h2>
-    <p>Something went wrong saving to Google Sheets. This is usually a configuration issue with the Apps Script URL.</p>
-    <div class="error-code" id="errorDetail"></div>
-    <p style="margin-bottom:20px">Your answers are still in this browser session. You can try again below.</p>
-    <button class="btn-retry" onclick="retrySubmit()">Try Again</button>
-    <button class="btn-home" style="display:inline-block;margin-top:8px" onclick="goHome()">↩ Back</button>
-  </div>
+<!-- ===== ACTIVITIES TAB ===== -->
+<div class="panel" id="tab-acts">
+<div class="stabs" style="margin-top:20px">
+<button class="stab active" onclick="showSub('acts','thrill',this)">⚡ Adrenaline</button>
+<button class="stab" onclick="showSub('acts','family',this)">👨‍👩‍👧 Family</button>
+<button class="stab" onclick="showSub('acts','creative',this)">🎨 Creative</button>
+<button class="stab" onclick="showSub('acts','evening',this)">🌙 Evening</button>
+</div>
+<div class="sp active" id="acts-thrill">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🚁</div><div><div class="vn">Tyrolienne MTL Zipline</div><div class="vsb">Old Port · Canada's only urban zipline</div></div></div><div class="vd">Launches from the Clock Tower pier over the St. Lawrence River. ~45 seconds of pure adrenaline, stunning views. Best for Jonathan, Ava, Nick. Summer weekends sell out. Book at tyroliennemtl.com.</div><div class="vtgs"><span class="vtg vbk">Book ahead</span><span class="vtg vpr">NOT for Danielle</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">⚓</div><div><div class="vn">Voiles en Voiles — Pirate Ropes Course</div><div class="vsb">Old Port · Aerial obstacles through pirate ships</div></div></div><div class="vd">Aerial ropes course built through actual docked pirate ships. Multiple difficulty tracks. Stack with the zipline for a full adrenaline Old Port morning. 2 hours. Book at voilesenvoiles.ca.</div><div class="vtgs"><span class="vtg vbk">Book ahead</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🌊</div><div><div class="vn">Lachine Rapids Rafting</div><div class="vsb">Saint-Henri · Class 2–3 whitewater</div></div></div><div class="vd">The trip's biggest adrenaline moment — whitewater on the St. Lawrence with the skyline behind you. Ava's "can't do anywhere else" experience. Jonathan, Ava, Nick (optional), Dad. Book at clubraft.com.</div><div class="vtgs"><span class="vtg vbk">clubraft.com</span><span class="vtg vpr">NOT for Danielle</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🪓</div><div><div class="vn">BATL Axe Throwing</div><div class="vsb">Downtown · 1.5-hour sessions</div></div></div><div class="vd">Urban axe throwing downtown. Great brothers activity or Ava's free-choice option. Coached instruction, accessible for all skill levels. Book at batl.ca.</div><div class="vtgs"><span class="vtg vbk">batl.ca</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🏋️</div><div><div class="vn">iFLY Indoor Skydiving</div><div class="vsb">Laval · 20 min from downtown</div></div></div><div class="vd">Full-body wind tunnel free-fall simulation. One of Ava's free-choice day options. In Laval, ~20 minutes from downtown Montreal. Safe, spectacular, memorable.</div><div class="vtgs"><span class="vtg vbk">Book ahead</span><span class="vtg vpr">NOT for Danielle</span></div></div>
+</div></div>
+<div class="sp" id="acts-family">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8fae8">🌀</div><div><div class="vn">La Grande Roue de Montréal</div><div class="vsb">Old Port · 197 ft · Glass floors</div></div></div><div class="vd">Canada's tallest Ferris wheel. Climate-controlled gondolas, panoramic St. Lawrence views. The skyline photo Ava asked for. Accessible and seated — perfect for Danielle, Lynda, everyone. Book online to skip lines.</div><div class="vtgs"><span class="vtg vpr">Pregnancy safe</span><span class="vtg vbk">Book online</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8fae8">🏟️</div><div><div class="vn">Olympic Park Tower Funicular</div><div class="vsb">East Montreal · World's tallest leaning tower</div></div></div><div class="vd">Inclined funicular rides up the leaning tower to a massive observation deck. Wild architecture completely unique to Montreal. Different skyline angle from the Ferris wheel. Biodôme and Botanical Garden right next door.</div><div class="vtgs"><span class="vtg vpr">Accessible/seated</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8fae8">🎪</div><div><div class="vn">Cirque du Soleil ECHO</div><div class="vsb">Old Port · Through June 28</div></div></div><div class="vd">The week's centerpiece event. Cirque's hometown show in their original Big Top. Full show, all ages, pregnancy-safe (seated). Book at cirquedusoleil.com IMMEDIATELY.</div><div class="vtgs"><span class="vtg vbk">BOOK NOW</span><span class="vtg vpr">Pregnancy safe</span></div></div>
+</div></div>
+<div class="sp" id="acts-creative">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#ede0ff">🌀</div><div><div class="vn">SAT Satosphere</div><div class="vsb">Plateau · 360° immersive dome</div></div></div><div class="vd">Full 360° audiovisual dome — Ava's interactive art request. The SAT pioneered immersive dome art. Nothing like it in the US. Summer programming through June 25. Book at sat.qc.ca.</div><div class="vtgs"><span class="vtg vbk">sat.qc.ca</span><span class="vtg vpr">Seated — OK for Danielle</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#ede0ff">🎭</div><div><div class="vn">TOHU Circus Arts Centre</div><div class="vsb">Saint-Michel · Cirque's sister institution</div></div></div><div class="vd">World's first ecological circus venue — presenting the next generation of Cirque-trained artists. Shows, workshops, residency performances. Good for Ava's free-choice day. Check tohu.ca for schedule.</div><div class="vtgs"><span class="vtg vbk">Check tohu.ca</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#ede0ff">🎮</div><div><div class="vn">Free-Roam VR Experience</div><div class="vsb">Downtown · Multiple venues</div></div></div><div class="vd">Walk through a virtual world with no controllers. Multiple downtown venues including Zero Latency MTL. Genuinely impressive for teenagers. One of Ava's free-choice options.</div><div class="vtgs"><span class="vtg vbk">Book ahead</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#ede0ff">🎨</div><div><div class="vn">MURAL Festival Murals Walk</div><div class="vsb">Saint-Laurent Blvd · Free forever</div></div></div><div class="vd">Freshly painted murals all along Saint-Laurent from Sherbrooke to Mont-Royal Ave. Free self-guided walk ~1.5 hours. TourBird free audio guide. Flat terrain throughout. Perfect for Danielle + Ava both wanting art.</div><div class="vtgs"><span class="vtg vpx">Free</span><span class="vtg vpa">Flat terrain</span><span class="vtg vpr">Pregnancy ideal</span></div></div>
+</div></div>
+<div class="sp" id="acts-evening">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#f0f5fc">🎵</div><div><div class="vn">Les Francos — Free Outdoor Stage Nightly</div><div class="vsb">Place des Festivals · Jun 12–20</div></div></div><div class="vd">The group's nightly ritual all week. Free outdoor concerts every evening. Giant screen, great sound, food vendors, thousands of Montrealers. Accessible. Danielle can find comfortable seating. By Friday it feels like your place.</div><div class="vtgs"><span class="vtg vpx">Free every night</span><span class="vtg vpr">Find seating for Danielle</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#f0f5fc">🥃</div><div><div class="vn">Atwater Cocktail Club</div><div class="vsb">Saint-Henri · Brothers whisky bar</div></div></div><div class="vd">One of the best cocktail bars in Montreal — excellent spirits program, knowledgeable bartenders. Near the Lachine Canal area. Nick mentioned wanting a whisky bar — this is it. Mocktails available for Danielle if she joins.</div><div class="vtgs"><span class="vtg vdi">Evening</span><span class="vtg vpr">Adults</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#f0f5fc">🎷</div><div><div class="vn">Diese Onze Jazz Club</div><div class="vsb">Plateau · Live jazz nightly</div></div></div><div class="vd">One of Montreal's best jazz clubs — live jazz every night in an intimate Plateau venue. World-class musicians. Great for Lynda who mentioned the jazz scene. Reserve for best spots.</div><div class="vtgs"><span class="vtg vdi">Evening</span><span class="vtg vbk">Reserve for seats</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#f0f5fc">🫕</div><div><div class="vn">La Banquise — Late Night Poutine</div><div class="vsb">Plateau · Open 24h · 30+ varieties</div></div></div><div class="vd">The legendary post-Francos ritual. Open 24h, classic gravy corn-starch based (confirm GF for Danielle). 10-min walk from Place des Festivals. Become a ritual: concert → La Banquise → home.</div><div class="vtgs"><span class="vtg vgf">Classic gravy GF — confirm</span></div></div>
+</div></div>
 </div>
 
+<!-- ===== SHOPPING TAB ===== -->
+<div class="panel" id="tab-shop">
+<div class="stabs" style="margin-top:20px">
+<button class="stab active" onclick="showSub('shop','boutiques',this)">👗 Boutiques</button>
+<button class="stab" onclick="showSub('shop','souvenirs',this)">🎁 Souvenirs</button>
+<button class="stab" onclick="showSub('shop','underground',this)">🚇 Underground City</button>
+<button class="stab" onclick="showSub('shop','specialty',this)">🍫 Specialty</button>
+</div>
+<div class="sp active" id="shop-boutiques">
+<div class="note nt">Danielle and Ava both specifically asked for local boutiques — not chains, not malls. Montreal is the best city in North America for exactly this.</div>
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f4ef">🛍️</div><div><div class="vn">Avenue Mont-Royal</div><div class="vsb">The Plateau · Best boutique street in Montreal</div></div></div><div class="vd">Local boutiques, vintage shops, indie fashion, art galleries, specialty coffee, record stores. Completely pedestrian-friendly. Flat. Danielle and Ava's heaven. Budget at least 2 hours.</div><div class="vtgs"><span class="vtg vpa">Flat outdoor</span><span class="vtg vpr">Pregnancy ideal</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f4ef">👗</div><div><div class="vn">Rue Saint-Denis</div><div class="vsb">Plateau · Fashion + cafés + bookstores</div></div></div><div class="vd">Runs parallel to Ave Mont-Royal — more fashion-focused, excellent cafés, bookstores, home goods, great restaurant patios. Combine with Ave Mont-Royal for a full Plateau afternoon. Mostly flat.</div><div class="vtgs"><span class="vtg vpa">Mostly flat</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f4ef">🏪</div><div><div class="vn">Rue Saint-Paul (Old Montreal)</div><div class="vsb">Historic street · Art + Québécois gifts</div></div></div><div class="vd">Galleries, artisan shops, Québécois crafts, clothing boutiques. More tourist-oriented than the Plateau but with genuinely interesting shops. Beautiful stone building facades. Note: cobblestones — wear good shoes.</div><div class="vtgs"><span class="vtg vpx">Cobblestone — wear good shoes</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#d8f4ef">🌿</div><div><div class="vn">Bernard Avenue (Mile End)</div><div class="vsb">Artsy + local designer boutiques</div></div></div><div class="vd">The less-touristy alternative — vintage, independent clothing, local designers, great café scene. More local vibe. Good add-on to a Plateau day. Adjacent to the bagel shops.</div><div class="vtgs"><span class="vtg vpa">Flat outdoor</span></div></div>
+</div></div>
+<div class="sp" id="shop-souvenirs">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdefd8">🎁</div><div><div class="vn">Marché Bonsecours</div><div class="vsb">Old Montreal · Artisan marketplace</div></div></div><div class="vd">Beautiful neo-classical domed building — now an artisan market with Québécois designers and crafts. Best selection of Made-in-Quebec souvenirs: maple products, wool, ceramics, jewelry, clothing. Accessible, air-conditioned.</div><div class="vtgs"><span class="vtg vpr">Accessible</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdefd8">🍁</div><div><div class="vn">Quebec Maple Products</div><div class="vsb">Multiple locations · The essential souvenir</div></div></div><div class="vd">Quebec produces 70%+ of the world's maple syrup. Maple syrup, maple butter, maple candy — the essential souvenirs. Find at Jean-Talon Market, Atwater Market, and specialty shops. All naturally GF.</div><div class="vtgs"><span class="vtg vgf">All GF</span><span class="vtg vpr">Safe for Danielle</span></div></div>
+</div></div>
+<div class="sp" id="shop-underground">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8e8fe">🚇</div><div><div class="vn">RESO — The Underground City</div><div class="vsb">Downtown · 33 km of tunnels</div></div></div><div class="vd">Montreal's famous underground network connecting metro stations, hotels, shopping centers, and office towers. Danielle asked about this — it's mostly chain stores and food courts, not glamorous, but a uniquely Montreal experience. Best in bad weather. Connects through Bonaventure and McGill metro stations. Climate-controlled and accessible — great for Danielle and Lynda on a rainy day.</div><div class="vtgs"><span class="vtg vpr">Climate-controlled · accessible</span><span class="vtg vpx">Free to walk</span></div></div>
+</div></div>
+<div class="sp" id="shop-specialty">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fff8e8">📚</div><div><div class="vn">Librairie Drawn &amp; Quarterly</div><div class="vsb">Mile End · World-famous comics + literature</div></div></div><div class="vd">One of the most celebrated independent bookstores in North America — specializing in comics, graphic novels, alternative literature. The physical store of the legendary D&amp;Q publishing house. On Bernard Ave, Mile End. Ava would love this.</div><div class="vtgs"></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fff8e8">🍫</div><div><div class="vn">Local Chocolatiers</div><div class="vsb">Old Montreal + Plateau · Artisan chocolate</div></div></div><div class="vd">Montreal has excellent artisan chocolate shops. Most naturally GF — confirm with each shop. Good souvenir and treat for Danielle (chocolate safe in moderation during pregnancy).</div><div class="vtgs"><span class="vtg vgf">Mostly GF — confirm</span><span class="vtg vpr">Safe in moderation</span></div></div>
+</div></div>
+</div>
+
+<!-- ===== CULTURE TAB ===== -->
+<div class="panel" id="tab-culture">
+<div class="stabs" style="margin-top:20px">
+<button class="stab active" onclick="showSub('culture','music',this)">🎵 Music</button>
+<button class="stab" onclick="showSub('culture','french',this)">🗣️ French Culture</button>
+<button class="stab" onclick="showSub('culture','circus',this)">🎪 Circus</button>
+<button class="stab" onclick="showSub('culture','streetart',this)">🎨 Street Art</button>
+</div>
+<div class="sp active" id="culture-music">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdefd8">🎵</div><div><div class="vn">Les Francos de Montréal</div><div class="vsb">Jun 12–20 · FREE every night</div></div></div><div class="vd">World's largest French-language music festival. 150+ performances. Free outdoor stage every night. 2026: Cœur de Pirate (Jun 19), Pierre Lapointe (Jun 18), Lorie (Jun 17), Laurent Voulzy, Orelsan, and more. Don't skip a single night.</div><div class="vtgs"><span class="vtg vpx">Free outdoor nightly</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fdefd8">🎷</div><div><div class="vn">Diese Onze / Upstairs Jazz Bar</div><div class="vsb">Plateau / downtown · Live jazz nightly</div></div></div><div class="vd">World-class jazz in intimate venues every night. Montreal has one of the great jazz scenes in the world — the Jazz Festival starts June 25, but the clubs have top jazz year-round. Good option for Lynda.</div><div class="vtgs"><span class="vtg vdi">Evening</span></div></div>
+</div></div>
+<div class="sp" id="culture-french">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f4fd">🗣️</div><div><div class="vn">French Immersion Tips</div><div class="vsb">Free · All week</div></div></div><div class="vd">Ava, Danielle, and Lynda all want French immersion. Key: always greet in French first ("Bonjour") — critical in Quebec. Phrases: "Merci beaucoup," "S'il vous plaît," "L'addition s'il vous plaît" (the bill), "Je voudrais..." (I would like). Most tourist-area locals switch to English instantly — but they appreciate the effort.</div><div class="vtgs"><span class="vtg vpx">Free</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f4fd">🥐</div><div><div class="vn">Québécois Food Bucket List</div><div class="vsb">Various locations</div></div></div><div class="vd">Montreal bagels (Fairmount or St-Viateur), smoked meat (Schwartz's), poutine (La Banquise or Modavie for Danielle GF), tourtière (meat pie), Quebec cheese, maple products everywhere, GF crêpes at Jean-Talon Market. These are the edible identity of Montreal.</div><div class="vtgs"><span class="vtg vgf">GF versions at specific spots</span></div></div>
+</div></div>
+<div class="sp" id="culture-circus">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#ede0ff">🎪</div><div><div class="vn">Cirque du Soleil ECHO</div><div class="vsb">Old Port · Through June 28 · BOOK NOW</div></div></div><div class="vd">Founded in Montreal in 1984 — seeing them perform in their hometown under the original Big Top is something genuinely special. ECHO is a full new production. Book at cirquedusoleil.com. The whole family's anchor event.</div><div class="vtgs"><span class="vtg vbk">BOOK NOW</span><span class="vtg vpr">Seated — pregnancy safe</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#ede0ff">🤸</div><div><div class="vn">TOHU Circus Arts Centre</div><div class="vsb">Saint-Michel · Cirque's sister venue</div></div></div><div class="vd">The world's first ecological circus venue — next-generation Cirque-trained artists performing in a geodesic dome. Shows and workshops. More intimate than the main Cirque show. Ava's free-choice option.</div><div class="vtgs"><span class="vtg vbk">Check tohu.ca</span></div></div>
+</div></div>
+<div class="sp" id="culture-streetart">
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🎨</div><div><div class="vn">MURAL Festival Murals — Saint-Laurent Blvd</div><div class="vsb">Free · Freshly painted · Permanent</div></div></div><div class="vd">Building-sized freshly painted murals from the June 4–14 MURAL Festival. Free self-guided walk from Sherbrooke to Mont-Royal Ave. TourBird free audio guide. Guided tours from Spade &amp; Palacio (~$20). 100+ murals. Completely flat. Ava + Danielle both wanted art.</div><div class="vtgs"><span class="vtg vpx">Free</span><span class="vtg vpa">Flat terrain</span><span class="vtg vpr">Pregnancy ideal</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#fde8e8">🖼️</div><div><div class="vn">Station 16 Gallery</div><div class="vsb">Saint-Laurent · Year-round street art gallery</div></div></div><div class="vd">Gallery arm of MURAL festival founders — year-round curated street art on Saint-Laurent. Free to visit. On the same walk as the outdoor murals. Sees work by major international street artists in gallery context.</div><div class="vtgs"><span class="vtg vpx">Free</span></div></div>
+</div></div>
+</div>
+
+<!-- ===== PRACTICAL TAB ===== -->
+<div class="panel" id="tab-practical">
+<div style="margin-top:20px">
+<div class="sh"><div class="shl"></div><h2>⚠️ Critical Pre-Trip Bookings</h2><div class="shl"></div></div>
+<div class="egrid">
+<div class="ec"><div class="es"></div><div class="ei"><div class="etop"><div class="en">🎪 Cirque du Soleil ECHO</div><span class="edt">Book TODAY</span></div><div class="ed">cirquedusoleil.com. Most urgent. Sells out weeks ahead. Plan for Tuesday June 16 evening. Pick a show time and book immediately — don't wait.</div><div class="etgs"><span class="etg etbk">Most urgent booking</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">🚁 Tyrolienne MTL Zipline</div><span class="edt">Book before trip</span></div><div class="ed">tyroliennemtl.com. Sunday June 14 morning. Summer Sundays sell out. Book Ava + Jonathan.</div><div class="etgs"><span class="etg etbk">Book ahead</span></div></div></div>
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">🌊 Lachine Rapids Rafting</div><span class="edt">Book before trip</span></div><div class="ed">clubraft.com. Wednesday June 17 morning. Jonathan + Ava + Nick (if joining) + Dad. Confirm group size.</div><div class="etgs"><span class="etg etbk">Book ahead</span></div></div></div>
+<div class="ec"><div class="es t"></div><div class="ei"><div class="etop"><div class="en">🛶 KSF Canal Kayaking — Danielle</div><span class="edt">Book before trip</span></div><div class="ed">ksfoutdoor.com. Same day as rafting (June 17 morning). Mention 6-months pregnancy when booking to confirm appropriate guidance.</div><div class="etgs"><span class="etg etbk">Mention pregnancy</span></div></div></div>
+<div class="ec"><div class="es p"></div><div class="ei"><div class="etop"><div class="en">⚓ Voiles en Voiles + 🌀 SAT Satosphere</div><span class="edt">Book before trip</span></div><div class="ed">voilesenvoiles.ca for pirate ropes course (June 14). sat.qc.ca for the 360° dome show (June 18 or whenever Ava picks). Both sell out on summer weekends.</div><div class="etgs"><span class="etg etbk">Book ahead</span></div></div></div>
+<div class="ec"><div class="es g"></div><div class="ei"><div class="etop"><div class="en">🌟 Toqué! — Splurge Group Dinner</div><span class="edt">Book 2–3 weeks ahead</span></div><div class="ed">toque.ca. Jonathan's requested high-end group dinner. Book for Sunday June 14 or any evening June 14–19. Confirm GF when booking — largely naturally GF menu but flag Danielle's needs.</div><div class="etgs"><span class="etg etbk">Book now</span></div></div></div>
+</div>
+
+<div class="sh"><div class="shl"></div><h2>💰 Money + Practical</h2><div class="shl"></div></div>
+<div class="vg">
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f0fe">💱</div><div><div class="vn">Currency — Canadian Dollars</div><div class="vsb">~$1 USD = $1.36 CAD</div></div></div><div class="vd">Everything is roughly 27% cheaper than US prices. $100 CAD = ~$73 USD. Credit cards accepted universally — Visa and Mastercard everywhere. Tipping: 15–20% at restaurants, 10–15% taxis.</div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f0fe">🚇</div><div><div class="vn">STM Metro + Weekly Pass</div><div class="vsb">~$30 CAD weekly · 4 lines</div></div></div><div class="vd">Clean, fast, reliable. Weekly pass ~$30 CAD covers everything. Key stations: Berri-UQAM (hub), Place-des-Arts (Francos/Quartier des Spectacles), Mont-Royal (Plateau), Jean-Drapeau (island parks). All stations have elevators — check the accessibility map for Danielle.</div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f0fe">🌡️</div><div><div class="vn">June Weather</div><div class="vsb">~22–26°C (72–78°F)</div></div></div><div class="vd">Warm and pleasant. Sunset ~8:45 PM — very long evenings. Occasional thunderstorms. Pack: light layers, rain jacket, comfortable walking shoes, sunscreen. Danielle: stay hydrated and avoid prolonged direct afternoon sun.</div><div class="vtgs"><span class="vtg vpr">Danielle: stay hydrated + sun protection</span></div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f0fe">🚗</div><div><div class="vn">Driving + Parking</div><div class="vsb">Park once, use metro all week</div></div></div><div class="vd">Drive to Montreal, park at the hotel for the week (~$20–40 CAD/day), use the metro everywhere. Driving downtown Montreal is stressful and unnecessary. Border: Lacolle/Champlain (I-87 connection). Build extra time on weekends. Return trip: rest stop every 90 min for Danielle.</div></div>
+<div class="vc"><div class="vt"><div class="vi" style="background:#e8f0fe">🏥</div><div><div class="vn">Health — Danielle at 6 Months</div><div class="vsb">Travel insurance required</div></div></div><div class="vd">Get travel health insurance covering Canada — your US insurance may not fully cover care abroad. Nearest hospital: CHUM (Centre Hospitalier de l'Université de Montréal), downtown. Bring prenatal records. OB should clear the trip before departure. Rules: no high-impact activity, no raw fish, no deli meats, rest breaks every 90 min on travel days, stay hydrated, avoid prolonged standing.</div><div class="vtgs"><span class="vtg vbk">Travel insurance required</span><span class="vtg vbk">OB clearance before trip</span></div></div>
+</div>
+
+<div class="sh"><div class="shl"></div><h2>🗺️ City Layout in One Paragraph</h2><div class="shl"></div></div>
+<div class="note ng">Montreal is an island. Downtown is center-south. Old Montreal + Old Port is at the southern waterfront — start every day here. The Plateau-Mont-Royal is northeast of downtown — the best neighborhood. Mile End is north of the Plateau. Olympic Park is east. The Lachine Canal and Atwater Market are west of downtown. Mont Royal (the mountain) is literally in the center of the island. Almost everything in this guide is 15–20 minutes from downtown by metro. Stay downtown or Old Montreal and you can walk to most things or take one metro stop.</div>
+</div>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
 <script>
-// ╔══════════════════════════════════════════════════════╗
-// ║  STEP 1 — Paste your Apps Script Web App URL below  ║
-// ║  (see README.md for how to get this URL)             ║
-// ╚══════════════════════════════════════════════════════╝
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxfrKTuokhfaY_kxW-pUCpRVy1sO571ZTeD1eL3hw1ZQOQJTR0xjoCNnkj46ISK0Dj_jw/exec';
-
-// ── Questions ────────────────────────────────────────────
-const Q = [
-  {id:1, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'When the whole family is together, what kind of activity sounds best?', opts:['A leisurely group meal at a great restaurant — everyone around the same table','A scenic outing everyone can enjoy at their own pace (park, waterfront, easy walk)','A structured activity or tour we all do together','A mix — group meals but free time for sub-groups to do their own thing']},
-  {id:2, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'How many whole-group dinners per week feels right to you?', opts:['Every night — family meals are the heart of the trip','Most nights (4–5), with a couple nights where sub-groups split off','A few times (2–3) — flexibility is important','Just one or two big group meals, otherwise everyone does their own thing']},
-  {id:3, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'Pick the best whole-group outing for the full age range (teen through 65):', opts:['Old Montreal — cobblestone streets, history, architecture, café stops','Old Port waterfront — outdoor vendors, Ferris wheel, easy strolling','A guided food tour of the city — eating our way around Montreal','Mont Royal park — the mountain, the lookout, a picnic']},
-  {id:4, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'How do you feel about one splurge group dinner at a high-end Montreal restaurant?', opts:['Love it — a special dinner together is a trip highlight','Fine with it if the menu works for everyone','Prefer something casual and relaxed for the whole group','I\'d rather save money and do a great casual spot instead']},
-  {id:5, sec:'whole',    lbl:'🗓 Whole Group',      type:'choice', text:'Honest walking tolerance for a full group day?', opts:['High — 5–8 miles a day, no problem','Moderate — 2–4 miles is fine, with rest breaks and places to sit','Low — short distances, need bench or café breaks frequently','Depends on terrain and weather — hills and heat are harder']},
-  {id:6, sec:'parents',  lbl:'👴👵 Parents\' Time', type:'choice', text:'If the parents had a half-day to themselves in Montreal, what sounds most appealing?', opts:['A slow relaxed café morning — great coffee, croissants, people-watching','A museum or gallery at their own pace, no rushing','A scenic garden or park — quiet, beautiful, easy on the feet','A boat or bus tour so they can see the city without walking much']},
-  {id:7, sec:'parents',  lbl:'👴👵 Parents\' Time', type:'choice', text:'What kind of neighborhood appeals most for a quiet wander?', opts:['Old Montreal — historic stone buildings and French character','A relaxed residential neighborhood with local shops and cafés','Near the waterfront or a park — greenery and open air','Stay close to the hotel, not wander far']},
-  {id:8, sec:'parents',  lbl:'👴👵 Parents\' Time', type:'choice', text:'Any physical limitations or mobility considerations to plan around?', opts:['None — I\'m in good shape, no problem with hills, stairs, long walks','Some — I prefer flat terrain and want to avoid steep hills','Yes — stairs and long distances are difficult; I need nearby seating','I\'d rather not say — but please keep activities manageable']},
-  {id:9, sec:'parents',  lbl:'👴👵 Parents\' Time', type:'choice', text:'What time of day do you have the most energy for sightseeing?', opts:['Morning — I like to be out early and rest in the afternoon','Midday — good from 10 AM to 2 PM, then I slow down','Afternoon — I hit my stride after noon','Evenings are actually my best time for being out']},
-  {id:10,sec:'couple',   lbl:'💑 Nick & Danielle',  type:'choice', text:'Danielle is 4 months pregnant. How important is it that couple activities are pregnancy-friendly?', opts:['Very — everything we do together should be easy and comfortable for Danielle','Somewhat — we\'ll mix in low-key options but still want real experiences','Nick can do some things solo while Danielle rests, if needed','Danielle wants to be treated normally — she\'ll speak up if something is too much']},
-  {id:11,sec:'couple',   lbl:'💑 Nick & Danielle',  type:'choice', text:'What\'s the ideal couple outing for Nick and Danielle in Montreal?', opts:['A beautiful sit-down dinner, just the two of them, at a great restaurant','A relaxed afternoon in a cool neighborhood — shopping, café, no agenda','Something cultural — a museum, gallery, or a show','An easy outdoor experience — gardens, waterfront, a scenic walk']},
-  {id:12,sec:'couple',   lbl:'💑 Nick & Danielle',  type:'choice', text:'How does Danielle feel about food adventurousness right now?', opts:['Open to everything — no issues with food on this trip','Prefer simple, familiar options — nothing too adventurous','Need to avoid certain things (strong smells, raw fish, spices) — I\'ll note below','Still figuring out what works — please keep options flexible']},
-  {id:13,sec:'couple',   lbl:'💑 Nick & Danielle',  type:'choice', text:'How important is dedicated rest/downtime built into each day?', opts:['Very — planned afternoon rests would be ideal','Somewhat — I\'ll rest when I need to, no need to schedule it','Not really — I\'d rather stay active and push through','Depends on how the day is going']},
-  {id:14,sec:'brothers', lbl:'👬 Brothers Only',     type:'choice', text:'Jonathan and Nick get a morning or afternoon together. What sounds best?', opts:['Something physical and active — a hike, rafting, or an adrenaline activity','Exploring a neighborhood together — walking, talking, discovering things','A great lunch or dinner, just the two of them, at somewhere worth going','A competitive activity — axe throwing, escape room, something fun']},
-  {id:15,sec:'brothers', lbl:'👬 Brothers Only',     type:'text',   text:'Is there anything specific Nick wants to do that he\'d want Jonathan along for?', placeholder:'e.g. "I really want to do the zipline" or "I want to find a good whisky bar"…'},
-  {id:16,sec:'general',  lbl:'🍽️ Food & Dining',   type:'choice', text:'Montreal is famous for its food. What are you most excited to eat or try?', opts:['Poutine, smoked meat, bagels — the classic Montreal staples','French/Québécois cuisine — bistros, terrines, French technique','Whatever the locals eat right now — the current hot spots','I\'m not a big foodie — just good, reliable, reasonably-priced meals']},
-  {id:17,sec:'general',  lbl:'🍽️ Food & Dining',   type:'text',   text:'Any dietary needs, allergies, or strong dislikes the group should know about?', placeholder:'e.g. "vegetarian", "nut allergy", "no seafood", "none"…'},
-  {id:18,sec:'general',  lbl:'🍽️ Food & Dining',   type:'choice', text:'Preferred atmosphere for group dinners?', opts:['Lively and bustling — I like noise, energy, atmosphere','Quieter and more intimate — I want to hear the conversation','Outdoor terraces or patios when weather allows','Flexible — if the food is great I don\'t care about the vibe']},
-  {id:19,sec:'general',  lbl:'⚡ Pace & Energy',    type:'choice', text:'Ideal daily rhythm on a trip like this?', opts:['Early start, packed schedule — see as much as possible','Active morning, leisurely afternoon, lively evening','Slow mornings, one or two things per day, no rushing','Totally flexible — I go with what the group decides']},
-  {id:20,sec:'general',  lbl:'⚡ Pace & Energy',    type:'choice', text:'How do you recharge when you\'re tired on a trip?', opts:['A quiet hour at the hotel — I need alone time to reset','A long coffee at a café — watching the world go by','A sit-down meal recharges me — food fixes everything','I push through — I\'ll rest when I\'m home']},
-  {id:21,sec:'general',  lbl:'🌆 City Experience',  type:'choice', text:'What excites you most about Montreal specifically?', opts:['The French language and culture — it genuinely feels like Europe','The food scene — one of the best restaurant cities in North America','The festivals and street energy — June means Les Francos festival!','Just being somewhere different and interesting together as a family']},
-  {id:22,sec:'general',  lbl:'🌆 City Experience',  type:'choice', text:'Anything you\'d quietly dread — things you hope NOT to do?', opts:['Long museum visits — I get bored in museums quickly','Intense physical activities — not looking for adrenaline','Crowded tourist traps — I prefer authentic local experiences','I\'m easygoing — I\'ll do whatever the group decides']},
-  {id:23,sec:'general',  lbl:'🌆 City Experience',  type:'choice', text:'How comfortable are you in a city where French is the primary language?', opts:['Very — I love immersing in another language','Fine — locals speak English too and I\'ll manage','A little nervous — I hope signage and menus are bilingual','I\'ll lean on whoever in the group speaks more French']},
-  {id:24,sec:'general',  lbl:'💬 Just for Jonathan', type:'text',  text:'One thing — just one — that you really hope happens on this trip?', placeholder:'Could be big or small — a meal, a view, a moment, an activity…'},
-  {id:25,sec:'general',  lbl:'💬 Just for Jonathan', type:'text',  text:'Anything Jonathan should know before planning — health, mobility, strong preferences, or things that could ruin the trip?', placeholder:'Completely optional but very helpful for planning…'}
-];
-
-// ── Submitted list (localStorage fallback) ──────────────
-const SK = 'mtl_submitted_2026';
-function getSubmitted(){try{return JSON.parse(localStorage.getItem(SK))||[]}catch(e){return[]}}
-function markSubmitted(p){const l=getSubmitted();if(!l.includes(p)){l.push(p);localStorage.setItem(SK,JSON.stringify(l))}}
-
-// ── State ────────────────────────────────────────────────
-let person='', curQ=0, answers={}, pending=null;
-
-// ── View switching ───────────────────────────────────────
-function show(id){['landing','quiz','complete','error-screen'].forEach(v=>document.getElementById(v).classList.remove('active'));document.getElementById(id).classList.add('active')}
-function goHome(){document.getElementById('personSelect').value='';document.getElementById('startBtn').disabled=true;document.getElementById('alreadyDone').style.display='none';show('landing');scroll()}
-function scroll(){window.scrollTo({top:0,behavior:'smooth'})}
-
-// ── Landing ──────────────────────────────────────────────
-function onPersonChange(){
-  const v=document.getElementById('personSelect').value;
-  document.getElementById('startBtn').disabled=!v;
-  const done=getSubmitted();
-  const ad=document.getElementById('alreadyDone');
-  if(v&&done.includes(v)){document.getElementById('alreadyName').textContent=v;ad.style.display='block'}else{ad.style.display='none'}
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
-
-function startQuiz(){
-  person=document.getElementById('personSelect').value;
-  if(!person)return;
-  answers={};curQ=0;
-  document.getElementById('quizPersonName').textContent=person;
-  buildQuiz();show('quiz');scroll();
+function showSub(tab, sub, btn) {
+  const parent = document.getElementById('tab-' + tab);
+  parent.querySelectorAll('.sp').forEach(p => p.classList.remove('active'));
+  parent.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+  document.getElementById(tab + '-' + sub).classList.add('active');
+  btn.classList.add('active');
 }
-
-// ── Build quiz DOM ───────────────────────────────────────
-const SC={whole:'tag-whole',parents:'tag-parents',couple:'tag-couple',brothers:'tag-brothers',general:'tag-general'};
-const LT=['A','B','C','D'];
-
-function ea(s){return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
-
-function buildQuiz(){
-  const b=document.getElementById('quizBody');b.innerHTML='';
-  Q.forEach((q,i)=>{
-    const isLast=i===Q.length-1;
-    const card=document.createElement('div');
-    card.className='q-card'+(i===0?' active':'');card.id='qc'+i;
-    let inp='';
-    if(q.type==='choice'){
-      inp='<div class="options-list">'+q.opts.map((o,oi)=>`<button class="opt-btn" onclick="pick(this,${q.id},${i})" data-val="${ea(o)}"><span class="opt-letter">${LT[oi]}</span><span>${o}</span></button>`).join('')+'</div>';
-    }else{
-      inp=`<textarea class="text-input" rows="3" placeholder="${ea(q.placeholder||'')}" id="tx${q.id}" oninput="onTxt(${q.id},${i})"></textarea>`;
-    }
-    card.innerHTML=`<div class="q-section-tag ${SC[q.sec]||'tag-general'}">${q.lbl}</div><div class="q-num">QUESTION ${q.id} OF 25</div><div class="q-text">${q.text}</div>${inp}<div class="q-nav">${i>0?`<button class="btn-prev" onclick="prev(${i})">← Back</button>`:''}<button class="btn-next" id="nb${i}" ${q.type==='text'?'':'disabled'} onclick="${isLast?'submit()':'`next('+i+')`'}">  ${isLast?'Submit Answers 🍁':'Next →'}</button></div>`;
-    b.appendChild(card);
-  });
-  prog();
-}
-
-function pick(btn,qId,qIdx){
-  document.getElementById('qc'+qIdx).querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');answers[qId]=btn.dataset.val;
-  document.getElementById('nb'+qIdx).disabled=false;
-}
-
-function onTxt(qId,qIdx){
-  answers[qId]=document.getElementById('tx'+qId).value;
-  document.getElementById('nb'+qIdx).disabled=false;
-}
-
-function next(i){document.getElementById('qc'+i).classList.remove('active');curQ=i+1;document.getElementById('qc'+curQ).classList.add('active');prog();scroll()}
-function prev(i){document.getElementById('qc'+i).classList.remove('active');curQ=i-1;document.getElementById('qc'+curQ).classList.add('active');prog();scroll()}
-function prog(){document.getElementById('progressFill').style.width=(curQ/(Q.length-1)*100)+'%';document.getElementById('quizCounter').textContent=`${curQ+1} / ${Q.length}`}
-
-// ── Submit ───────────────────────────────────────────────
-function submit(){
-  Q.filter(q=>q.type==='text').forEach(q=>{const e=document.getElementById('tx'+q.id);if(e)answers[q.id]=e.value||''});
-  const payload={person,timestamp:new Date().toLocaleString('en-US',{timeZone:'America/New_York'})};
-  Q.forEach(q=>{payload['Q'+q.id+'_'+q.text.substring(0,40).replace(/[^a-zA-Z0-9]/g,'_')]=answers[q.id]||''});
-  pending=payload;
-  send(payload);
-}
-
-function send(payload){
-  if(SHEET_URL==='YOUR_APPS_SCRIPT_URL_HERE'){document.getElementById('errorDetail').textContent='SHEET_URL not configured. Follow the setup instructions in README.md.';show('error-screen');return}
-  document.getElementById('submitting').classList.add('active');
-  fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)})
-  .then(()=>{document.getElementById('submitting').classList.remove('active');markSubmitted(person);document.getElementById('completeName').textContent=person;show('complete');scroll()})
-  .catch(err=>{document.getElementById('submitting').classList.remove('active');document.getElementById('errorDetail').textContent=err.toString();show('error-screen')});
-}
-
-function retrySubmit(){if(pending)send(pending)}
-
-// ── Init ─────────────────────────────────────────────────
-window.addEventListener('load',()=>{if(SHEET_URL==='YOUR_APPS_SCRIPT_URL_HERE')document.getElementById('configWarning').style.display='block'});
-
-// Fix onclick string interpolation for next button
-document.addEventListener('click',e=>{
-  const nb=e.target.closest('.btn-next');
-  if(!nb)return;
-  const id=nb.id;
-  if(!id||!id.startsWith('nb'))return;
-  const idx=parseInt(id.slice(2));
-  if(idx===Q.length-1)submit();
-  else next(idx);
-});
-// Override the inline onclick on btn-next since we handle it above
-// (inline onclicks still fire — remove them from template)
 </script>
 </body>
 </html>
