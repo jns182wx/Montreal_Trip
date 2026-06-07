@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Deep Goblin Weather Scout v3: hard trip-date filter June 13-20, 2026 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1754,10 +1755,12 @@ body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink)}
 <div class="wx-hero">
   <h2>🦝 Deep Goblin Weather Scout</h2>
   <p>This panel reads <strong>trip_forecast.json</strong> from this GitHub Pages folder and turns the raw forecast into actual trip decisions: drizzle risk, summit-view windows, rain backups, and the eternal question of whether Tremblant is merely damp or personally cursed.</p>
-  <div class="wx-status" id="wx-status">Loading forecast goblin...</div>
+  <div class="wx-status" id="wx-status">Loading trip-window forecast goblin...</div>
 </div>
 
-<div class="note nt"><strong>Upload rule:</strong> Put this updated <code>index.html</code> beside <code>trip_forecast.json</code> in the repository root. The page first tries <code>./trip_forecast.json</code>, then <code>./data/trip_forecast.json</code>, because apparently even weather goblins need fallback paths.</div>
+<div class="note nt"><strong>Version 3 hard-trip-date fix:</strong> This file refuses to display any forecast day before <strong>June 13, 2026</strong>, even if the JSON contains earlier data. Tiny victory over calendar goblinry.<br><br><strong>Upload rule:</strong> Put this updated <code>index.html</code> beside <code>trip_forecast.json</code> in the repository root. The page first tries <code>./trip_forecast.json</code>, then <code>./data/trip_forecast.json</code>, because apparently even weather goblins need fallback paths.</div>
+
+<div class="note nb"><strong>Trip-date filter:</strong> Montréal only shows <strong>June 13–16</strong>. Tremblant Village only shows <strong>June 16–20</strong>. Tremblant Summit only shows <strong>June 17–20</strong>. Pre-trip weather is now banished, because apparently the goblin needed a calendar.</div>
 
 <div class="wx-grid">
   <div class="wx-card">
@@ -1950,12 +1953,25 @@ function wxDayName(iso){
   const d=new Date(iso+'T12:00:00');
   return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
 }
-function wxBucket(rows){
+const WX_TRIP_DATE_FLOOR='2026-06-13';
+const WX_TRIP_WINDOWS={
+  montreal:{start:'2026-06-13',end:'2026-06-16',label:'Jun 13–16'},
+  tremblant:{start:'2026-06-16',end:'2026-06-20',label:'Jun 16–20'},
+  summit:{start:'2026-06-17',end:'2026-06-20',label:'Jun 17–20'}
+};
+function wxInWindow(date,win){
+  // Hard trip floor: never show pre-arrival forecast rows. Humans do keep inventing ways to make calendars optional, so here we are.
+  if(date < WX_TRIP_DATE_FLOOR) return false;
+  if(!win) return true;
+  return (!win.start || date>=win.start) && (!win.end || date<=win.end);
+}
+function wxBucket(rows,win){
   const by={};
   rows.forEach(r=>{
     const t=String(r.time||r.date||'');
     if(!t.includes('-')) return;
     const date=t.slice(0,10);
+    if(!wxInWindow(date,win)) return;
     const hour=t.includes('T')?Number(t.slice(11,13)):12;
     if(hour<7 || hour>22) return;
     (by[date] ||= []).push(r);
@@ -1976,13 +1992,19 @@ function wxBucket(rows){
     return {date,day:wxDayName(date),hi:temps.length?Math.max(...temps):NaN,lo:temps.length?Math.min(...temps):NaN,pop,precip,driz,view,bestHour,label,cls};
   });
 }
-function wxRenderLocation(loc, elId){
+function wxRenderLocation(loc, elId, win){
+  if(!win){
+    if(elId==='wx-montreal') win=WX_TRIP_WINDOWS.montreal;
+    else if(elId==='wx-tremblant') win=WX_TRIP_WINDOWS.tremblant;
+    else if(elId==='wx-summit') win=WX_TRIP_WINDOWS.summit;
+  }
   const el=document.getElementById(elId);
   const rows=wxToRows(loc);
   if(!el) return [];
   if(!rows.length){ el.innerHTML='<div class="wx-error">No usable hourly rows found for this location. The goblin found the file, then found sadness inside it.</div>'; return []; }
-  const days=wxBucket(rows);
-  el.innerHTML=days.map(d=>`
+  const days=wxBucket(rows,win);
+  if(!days.length){ el.innerHTML='<div class="wx-error">Forecast loaded, but no rows match this trip window ('+(win&&win.label?win.label:'trip dates')+'). Check that <code>trip_forecast.json</code> was generated close enough to the trip dates.</div>'; return []; }
+  el.innerHTML='<div class="wx-small"><strong>Showing only trip dates:</strong> '+(win&&win.label?win.label:'active trip window')+'</div>'+days.map(d=>`
     <div class="wx-day">
       <div class="wx-date"><strong>${d.day}</strong><span class="wx-badge ${d.cls}">${d.label}</span></div>
       <div class="wx-meta">
@@ -2021,9 +2043,9 @@ async function wxLoad(){
     const montreal=wxPickLocation(data,['montreal','montréal','mtl']);
     const trem=wxPickLocation(data,['tremblant_village','mont-tremblant village','tremblant village','tremblant']);
     const summit=wxPickLocation(data,['tremblant_summit','mont-tremblant summit','summit']);
-    const mDays=wxRenderLocation(montreal,'wx-montreal');
-    const tDays=wxRenderLocation(trem,'wx-tremblant');
-    const sDays=wxRenderLocation(summit || trem,'wx-summit');
+    const mDays=wxRenderLocation(montreal,'wx-montreal',WX_TRIP_WINDOWS.montreal);
+    const tDays=wxRenderLocation(trem,'wx-tremblant',WX_TRIP_WINDOWS.tremblant);
+    const sDays=wxRenderLocation(summit || trem,'wx-summit',WX_TRIP_WINDOWS.summit);
     wxBuildCommands(mDays,tDays,sDays);
   }catch(err){
     status.textContent='Forecast did not load.';
