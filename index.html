@@ -197,6 +197,15 @@ body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink)}
 .mini-card ul li::before{content:'→ ';color:var(--gold);font-weight:700}
 
 @media(max-width:500px){.lodge-grid{grid-template-columns:1fr}.rank-card{grid-template-columns:44px 1fr}.lc-imgs{height:140px}}
+
+
+/* ── DEEP GOBLIN WEATHER SCOUT ── */
+.wx-hero{background:linear-gradient(135deg,var(--navy),#26395f);color:white;border-radius:18px;padding:18px;margin:18px 0;box-shadow:0 8px 24px rgba(0,0,0,.16);position:relative;overflow:hidden}
+.wx-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 15% 20%,rgba(240,180,41,.18),transparent 35%),radial-gradient(circle at 85% 70%,rgba(26,107,92,.18),transparent 42%)}
+.wx-hero>*{position:relative;z-index:1}.wx-hero h2{font-family:'Playfair Display',serif;font-size:1.45rem;line-height:1.15;margin-bottom:6px}.wx-hero p{font-size:.82rem;color:rgba(255,255,255,.74);line-height:1.55;max-width:780px}
+.wx-status{margin-top:10px;font-size:.72rem;color:rgba(255,255,255,.58);font-weight:600}.wx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:14px}.wx-card{background:white;border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:0 3px 12px rgba(0,0,0,.06)}
+.wx-card h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:3px}.wx-sub{font-size:.72rem;color:var(--muted);margin-bottom:10px}.wx-day{border-top:1px solid var(--border);padding:9px 0}.wx-day:first-of-type{border-top:none}.wx-date{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}.wx-date strong{font-size:.86rem}.wx-badge{display:inline-flex;align-items:center;border-radius:999px;padding:2px 8px;font-size:.62rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:var(--warm);color:var(--muted);white-space:nowrap}.wx-badge.good{background:#e8f7f0;color:var(--green)}.wx-badge.warn{background:#fff3cd;color:#7a5c00}.wx-badge.bad{background:#fee8e8;color:var(--red)}.wx-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;font-size:.7rem;color:#6b6050;line-height:1.35}.wx-meta span b{color:var(--ink)}.wx-callout{background:#111827;color:#f9fafb;border-radius:16px;padding:14px;margin-top:14px;border:1px solid rgba(255,255,255,.08)}.wx-callout h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:8px}.wx-callout ul{list-style:none;padding:0;margin:0}.wx-callout li{font-size:.75rem;line-height:1.55;border-top:1px solid rgba(255,255,255,.08);padding:7px 0;color:rgba(255,255,255,.78)}.wx-callout li:first-child{border-top:none}.wx-callout li::before{content:'🦝 ';opacity:.9}.wx-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:12px}.wx-action{background:#fdf9ee;border:1px solid #f0d99a;border-radius:12px;padding:11px;font-size:.74rem;line-height:1.45;color:#6b6050}.wx-action strong{display:block;color:var(--ink);font-size:.8rem;margin-bottom:3px}.wx-error{background:#fff5f5;border:1px solid #fcc;color:var(--red);border-radius:12px;padding:12px;font-size:.78rem;line-height:1.5;margin-top:12px}.wx-small{font-size:.66rem;color:var(--muted);margin-top:8px;line-height:1.45}
+
 </style>
 </head>
 <body>
@@ -236,6 +245,7 @@ body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink)}
   <button class="tb" onclick="showTab('outdoor',this)"><span class="ti">🌿</span>Outdoor</button>
   <button class="tb" onclick="showTab('acts',this)"><span class="ti">⚡</span>Activities</button>
   <button class="tb" onclick="showTab('shop',this)"><span class="ti">🛍️</span>Shopping</button>
+  <button class="tb" onclick="showTab('weather',this)"><span class="ti">🌦️</span>Weather</button>
   <button class="tb" onclick="showTab('planning',this)"><span class="ti">📋</span>Planning</button>
 </div></div>
 
@@ -1738,6 +1748,49 @@ body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink)}
 </div>
 </div>
 
+
+<!-- ===== WEATHER TAB ===== -->
+<div class="panel" id="tab-weather">
+<div class="wx-hero">
+  <h2>🦝 Deep Goblin Weather Scout</h2>
+  <p>This panel reads <strong>trip_forecast.json</strong> from this GitHub Pages folder and turns the raw forecast into actual trip decisions: drizzle risk, summit-view windows, rain backups, and the eternal question of whether Tremblant is merely damp or personally cursed.</p>
+  <div class="wx-status" id="wx-status">Loading forecast goblin...</div>
+</div>
+
+<div class="note nt"><strong>Upload rule:</strong> Put this updated <code>index.html</code> beside <code>trip_forecast.json</code> in the repository root. The page first tries <code>./trip_forecast.json</code>, then <code>./data/trip_forecast.json</code>, because apparently even weather goblins need fallback paths.</div>
+
+<div class="wx-grid">
+  <div class="wx-card">
+    <h3>🏙️ Montréal</h3>
+    <div class="wx-sub">City comfort, outdoor festival windows, thunder/rain risk.</div>
+    <div id="wx-montreal">Waiting for data...</div>
+  </div>
+  <div class="wx-card">
+    <h3>🏔️ Tremblant Village</h3>
+    <div class="wx-sub">Village walking, luge, dining, pool/hot tub timing.</div>
+    <div id="wx-tremblant">Waiting for data...</div>
+  </div>
+  <div class="wx-card">
+    <h3>🚡 Tremblant Summit</h3>
+    <div class="wx-sub">Gondola visibility, low cloud, summit-view chances.</div>
+    <div id="wx-summit">Waiting for data...</div>
+  </div>
+</div>
+
+<div class="wx-callout">
+  <h3>Command Board</h3>
+  <ul id="wx-command-list">
+    <li>Waiting for the forecast goblin to stop gnawing the JSON file.</li>
+  </ul>
+</div>
+
+<div class="wx-actions">
+  <div class="wx-action"><strong>Drizzle Goblin Index</strong>High humidity + low cloud + tiny rain + bad visibility. This is the Tremblant “not raining, but somehow everything is wet” detector.</div>
+  <div class="wx-action"><strong>Summit View Score</strong>High score means ride the gondola. Low score means the summit is selling premium tickets to stare into milk.</div>
+  <div class="wx-action"><strong>Best Window</strong>The daytime hour with the best blend of low drizzle, decent visibility, and low rain risk. Weather apps refuse to explain this because apparently dignity died.</div>
+</div>
+</div>
+
 <!-- ===== PLANNING TAB ===== -->
 <div class="panel" id="tab-planning">
 <div class="sh" style="margin-top:20px"><div class="shl"></div><h2>📋 Advance Booking — Urgency Table</h2><div class="shl"></div></div>
@@ -1766,6 +1819,9 @@ body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink)}
 </div>
 
 <div class="sh"><div class="shl"></div><h2>🌤️ Weather-Sensitive Planning</h2><div class="shl"></div></div>
+
+<div class="note nb"><strong>Deep Goblin shortcut:</strong> The new 🌦️ Weather tab reads <code>trip_forecast.json</code> and turns it into Montréal/Tremblant action windows, drizzle risk, and summit-view scoring.</div>
+
 <div class="mini-grid">
   <div class="mini-card"><h4>Plan on best-weather day</h4><ul><li>Mount Royal / Kondiaronk Belvedere</li><li>Parc national du Mont-Tremblant trails</li><li>Tonga Lumina (light rain OK, heavy rain problematic)</li><li>Tam-Tams drum circle (Sunday — weather dependent)</li></ul></div>
   <div class="mini-card"><h4>Rainy day backups — use on bad weather days</h4><ul><li>Montreal Biodome (best rainy day indoor)</li><li>Harry Potter: Visions of Magic (Place Bonaventure)</li><li>Montreal Science Centre + IMAX (Old Port)</li><li>Pointe-à-Callière (Tue–Sun)</li><li>brind'O Aquaclub indoor waterpark (Tremblant)</li></ul></div>
@@ -1808,6 +1864,175 @@ document.addEventListener('DOMContentLoaded',function(){
     btn.nextElementSibling.classList.add('open');
   });
 });
+
+
+// ── Deep Goblin Weather Scout ──
+async function wxFetchTripForecast(){
+  const candidates=['./trip_forecast.json','./data/trip_forecast.json'];
+  let lastError=null;
+  for(const url of candidates){
+    try{
+      const res=await fetch(url+'?v='+Date.now(),{cache:'no-store'});
+      if(!res.ok) throw new Error(url+' returned '+res.status);
+      const data=await res.json();
+      return {data,url};
+    }catch(err){ lastError=err; }
+  }
+  throw lastError || new Error('No forecast file found');
+}
+function wxNum(v, fallback=null){
+  const n=Number(v);
+  return Number.isFinite(n)?n:fallback;
+}
+function wxToRows(loc){
+  if(!loc) return [];
+  const h=loc.hourly;
+  if(Array.isArray(h)) return h;
+  if(h && typeof h==='object' && Array.isArray(h.time)){
+    return h.time.map((t,i)=>{
+      const row={time:t};
+      Object.keys(h).forEach(k=>{ if(k!=='time' && Array.isArray(h[k])) row[k]=h[k][i]; });
+      return row;
+    });
+  }
+  if(Array.isArray(loc)) return loc;
+  return [];
+}
+function wxPickLocation(data, names){
+  if(!data) return null;
+  if(data.locations){
+    for(const n of names){ if(data.locations[n]) return data.locations[n]; }
+    const keys=Object.keys(data.locations);
+    for(const k of keys){
+      const low=(k+' '+(data.locations[k].label||'')).toLowerCase();
+      if(names.some(n=>low.includes(n.replace('_',' ')))) return data.locations[k];
+    }
+  }
+  for(const n of names){ if(data[n]) return data[n]; }
+  return null;
+}
+function wxDrizzle(row){
+  if(row.drizzle_goblin_index!==undefined) return wxNum(row.drizzle_goblin_index,0);
+  const rh=wxNum(row.relative_humidity_2m ?? row.relative_humidity,0);
+  const low=wxNum(row.cloud_cover_low ?? row.low_cloud_cover ?? row.cloudcover_low,0);
+  const precip=wxNum(row.precipitation ?? row.rain,0);
+  const pop=wxNum(row.precipitation_probability ?? row.precip_probability,0);
+  const vis=wxNum(row.visibility,99999);
+  const temp=wxNum(row.temperature_2m ?? row.temperature,null);
+  const dew=wxNum(row.dew_point_2m ?? row.dewpoint,null);
+  let s=0;
+  if(rh>=90)s+=2; else if(rh>=80)s+=1;
+  if(low>=80)s+=3; else if(low>=60)s+=2; else if(low>=40)s+=1;
+  if(precip>=0.02)s+=2; else if(precip>0)s+=1;
+  if(pop>=60)s+=2; else if(pop>=35)s+=1;
+  if(vis<=3000)s+=2; else if(vis<=8000)s+=1;
+  if(temp!==null && dew!==null){ const spread=temp-dew; if(spread<=2.7)s+=2; else if(spread<=5.4)s+=1; }
+  return Math.max(0,Math.min(10,Math.round(s)));
+}
+function wxSummit(row){
+  if(row.summit_view_score!==undefined) return wxNum(row.summit_view_score,0);
+  const low=wxNum(row.cloud_cover_low ?? row.low_cloud_cover ?? row.cloudcover_low,0);
+  const vis=wxNum(row.visibility,20000);
+  const precip=wxNum(row.precipitation ?? row.rain,0);
+  const pop=wxNum(row.precipitation_probability ?? row.precip_probability,0);
+  const gust=wxNum(row.wind_gusts_10m ?? row.wind_gusts,0);
+  let s=10;
+  if(low>=80)s-=5; else if(low>=60)s-=3; else if(low>=40)s-=1;
+  if(vis<3000)s-=4; else if(vis<8000)s-=2;
+  if(precip>0.02)s-=3; else if(precip>0)s-=1;
+  if(pop>=60)s-=2; else if(pop>=35)s-=1;
+  if(gust>=28)s-=2; else if(gust>=19)s-=1;
+  return Math.max(0,Math.min(10,Math.round(s)));
+}
+function wxF(n){ return Number.isFinite(n)?Math.round(n)+'°':'—'; }
+function wxIn(n){ return Number.isFinite(n)?n.toFixed(2)+'"':'—'; }
+function wxDayName(iso){
+  const d=new Date(iso+'T12:00:00');
+  return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+}
+function wxBucket(rows){
+  const by={};
+  rows.forEach(r=>{
+    const t=String(r.time||r.date||'');
+    if(!t.includes('-')) return;
+    const date=t.slice(0,10);
+    const hour=t.includes('T')?Number(t.slice(11,13)):12;
+    if(hour<7 || hour>22) return;
+    (by[date] ||= []).push(r);
+  });
+  return Object.entries(by).slice(0,8).map(([date,rs])=>{
+    const temps=rs.map(r=>wxNum(r.temperature_2m ?? r.temperature,null)).filter(Number.isFinite);
+    const pops=rs.map(r=>wxNum(r.precipitation_probability ?? r.precip_probability,0));
+    const precip=rs.reduce((s,r)=>s+wxNum(r.precipitation ?? r.rain,0),0);
+    const driz=Math.round(rs.reduce((s,r)=>s+wxDrizzle(r),0)/Math.max(1,rs.length));
+    const view=Math.round(rs.reduce((s,r)=>s+wxSummit(r),0)/Math.max(1,rs.length));
+    const best=rs.slice().sort((a,b)=>((wxSummit(b)*1.4)-wxDrizzle(b)-wxNum(b.precipitation_probability ?? b.precip_probability,0)/20)-((wxSummit(a)*1.4)-wxDrizzle(a)-wxNum(a.precipitation_probability ?? a.precip_probability,0)/20))[0];
+    const bestHour=best && String(best.time||'').includes('T') ? String(best.time).slice(11,16) : 'daytime';
+    const pop=Math.max(...pops,0);
+    let label='Usable window'; let cls='good';
+    if(driz>=7 || pop>=70){ label='Damp goblin'; cls='bad'; }
+    else if(driz>=5 || pop>=45){ label='Flexible plan'; cls='warn'; }
+    if(view>=7 && driz<=4 && pop<50){ label='Summit/window'; cls='good'; }
+    return {date,day:wxDayName(date),hi:temps.length?Math.max(...temps):NaN,lo:temps.length?Math.min(...temps):NaN,pop,precip,driz,view,bestHour,label,cls};
+  });
+}
+function wxRenderLocation(loc, elId){
+  const el=document.getElementById(elId);
+  const rows=wxToRows(loc);
+  if(!el) return [];
+  if(!rows.length){ el.innerHTML='<div class="wx-error">No usable hourly rows found for this location. The goblin found the file, then found sadness inside it.</div>'; return []; }
+  const days=wxBucket(rows);
+  el.innerHTML=days.map(d=>`
+    <div class="wx-day">
+      <div class="wx-date"><strong>${d.day}</strong><span class="wx-badge ${d.cls}">${d.label}</span></div>
+      <div class="wx-meta">
+        <span><b>Temp:</b> ${wxF(d.lo)}–${wxF(d.hi)}</span>
+        <span><b>Rain:</b> ${Math.round(d.pop)}% / ${wxIn(d.precip)}</span>
+        <span><b>Drizzle:</b> ${d.driz}/10</span>
+        <span><b>View:</b> ${d.view}/10</span>
+        <span><b>Best:</b> ${d.bestHour}</span>
+        <span><b>Move:</b> ${d.label}</span>
+      </div>
+    </div>`).join('') + '<div class="wx-small">Scores are local decision helpers, not gospel. Weather models are useful, but so is looking out the window like a mammal with eyes.</div>';
+  return days;
+}
+function wxBuildCommands(mtl,trem,sum){
+  const list=document.getElementById('wx-command-list');
+  if(!list) return;
+  const bullets=[];
+  const sat=mtl.find(d=>d.date.endsWith('-06-13')) || mtl[0];
+  if(sat) bullets.push(`Montréal ${sat.day}: ${sat.label.toLowerCase()} around the city. Best outdoor window around ${sat.bestHour}. Use this for MURAL, Old Port, terraces, and Francos.`);
+  const wetTrem=trem.filter(d=>d.driz>=6 || d.pop>=55).slice(0,2);
+  if(wetTrem.length) bullets.push(`Tremblant damp-risk days: ${wetTrem.map(d=>d.day).join(', ')}. Keep village/condo spa/indoor backup ready instead of marching everyone into mountain soup.`);
+  const bestSummit=sum.slice().sort((a,b)=>(b.view-b.driz)-(a.view-a.driz))[0];
+  if(bestSummit) bullets.push(`Best gondola/summit candidate: ${bestSummit.day} around ${bestSummit.bestHour}. If the Summit View Score is under 5 that morning, do not pay money to admire clouds from inside clouds.`);
+  const bestTrem=trem.slice().sort((a,b)=>(b.view-b.driz-b.pop/20)-(a.view-a.driz-a.pop/20))[0];
+  if(bestTrem) bullets.push(`Best Tremblant outdoor candidate: ${bestTrem.day}. Put luge, park trails, and village wandering there. Let the rainier day become hot tub civilization.`);
+  if(!bullets.length) bullets.push('Forecast loaded, but not enough day-level data to make commands. The goblin has notes, mostly hostile ones.');
+  list.innerHTML=bullets.map(b=>`<li>${b}</li>`).join('');
+}
+async function wxLoad(){
+  const status=document.getElementById('wx-status');
+  if(!status) return;
+  try{
+    const {data,url}=await wxFetchTripForecast();
+    const generated=data.generated_at || data.generation_time || data.updated_at || data.created_at;
+    status.textContent='Loaded '+url+(generated?' · updated '+new Date(generated).toLocaleString():'');
+    const montreal=wxPickLocation(data,['montreal','montréal','mtl']);
+    const trem=wxPickLocation(data,['tremblant_village','mont-tremblant village','tremblant village','tremblant']);
+    const summit=wxPickLocation(data,['tremblant_summit','mont-tremblant summit','summit']);
+    const mDays=wxRenderLocation(montreal,'wx-montreal');
+    const tDays=wxRenderLocation(trem,'wx-tremblant');
+    const sDays=wxRenderLocation(summit || trem,'wx-summit');
+    wxBuildCommands(mDays,tDays,sDays);
+  }catch(err){
+    status.textContent='Forecast did not load.';
+    const msg='<div class="wx-error"><strong>Could not load trip_forecast.json.</strong><br>Put <code>trip_forecast.json</code> in the same GitHub repo folder as <code>index.html</code>, or put it in <code>/data/trip_forecast.json</code>. Browser error: '+String(err.message||err)+'</div>';
+    ['wx-montreal','wx-tremblant','wx-summit'].forEach(id=>{const el=document.getElementById(id); if(el) el.innerHTML=msg;});
+  }
+}
+document.addEventListener('DOMContentLoaded',wxLoad);
+
 </script>
 </body>
 </html>
